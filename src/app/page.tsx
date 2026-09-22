@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import DatasetExplorer from "./dataset-explorer";
 import {
   DEFAULT_MODEL,
   FIELDS,
@@ -468,6 +469,7 @@ export default function Page() {
             Export evaluation
           </button>
         </section>
+        <DatasetExplorer dataset={dataset} />
         <section className="settings">
           <div>
             <label>

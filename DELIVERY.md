@@ -34,3 +34,14 @@ Cover BOTH UK and Germany; default Mixed. ProjectField also includes country. Da
 
 ## Deployment follow-up
 The user authorized production Vercel deployment and requested CLI verification. Target: `stephen-brownseys-projects/jev`, connected to `Brownsey/jev`. The user will supply the OpenRouter API key and configure a custom domain later. Configure the hosted app access token separately; verify a Ready deployment and a real hosted demo journey without requiring paid model inference.
+
+## Dataset explorer follow-up — contract v1.2
+Ordinary substantive UI change: read-only view of the existing active dataset, with no new persistence, API or credential boundary. Lead owns integration/tests; Terra owns the isolated explorer component/styles; one independent combined validation/review gate.
+
+- D1 A keyboard-operable “Explore dataset” disclosure opens a visual overview of the generated dataset. Empty workspace explains that pairs must be generated. Summary shows the actual country, seed and pair count.
+- D2 Overview shows actual pair counts by country, expected outcome and scenario, plus field completeness across both records. Clearly label synthetic data and expected outcomes; never imply model results or real project imagery.
+- D3 Browse cards containing paired project/address previews; open any card to compare all eight fields from both records, with absent values labelled. Search across all fields and scenarios, filter UK/Germany, paginate in batches of 12, and show a clear no-results state. Changing filters or dataset resets pagination and keeps the selected comparison within visible results.
+- D4 Browsing preserves evaluation settings/results and the saved dataset. Reload restores that dataset through existing persistence; explorer disclosure/filter state need not persist. Responsive desktop/mobile layout, keyboard focus and bounded rendering for 500 pairs.
+- D5 Prove D1–D4 through browser acceptance tests and independent visual/source review, run existing type/unit/build/browser gates, then deploy and verify the production deployment and browser journey. No paid inference needed for this UI change.
+
+Visual direction: preserve the existing typography and blue/teal palette. A broad clickable dataset summary expands into proportional data bars, compact pair cards and a side-by-side record comparison; stack all panels on mobile. Use real field values, not fabricated maps or photography.

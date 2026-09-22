@@ -90,6 +90,8 @@ Address-first example: “Prioritise country, city, postcode, street and buildin
 
 ## Evaluation and storage
 
+After generating pairs, click **Explore dataset** to see country and scenario breakdowns, expected answers and field completeness. Search across project fields, filter UK/Germany, and browse cards in pages of 12. Open a card for the full pair of records, including missing values. This view uses the current saved dataset and does not run the model or change your evaluation.
+
 Accuracy is correct final decisions divided by completed pairs; review counts as unresolved, not correct. Precision is true matches divided by predicted matches. Recall is true matches divided by actual matches among completed pairs. Coverage is non-review decisions divided by completed pairs. Undefined ratios display as unavailable. Partial runs are evaluated only over completed pairs.
 
 This is a **pairwise benchmark**, not an exhaustive database deduplication or clustering system. Pair generation avoids the cost of testing every possible record combination. Synthetic scores do not substitute for a held-out, human-labelled real-world evaluation set.
