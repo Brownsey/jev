@@ -3,28 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FIELDS } from "../lib/lab";
 import type { Dataset, Pair, Resolution } from "../lib/types";
+import { ResolutionBadge, resolutionStatus } from "./resolution-badge";
 import styles from "./dataset-explorer.module.css";
 
 const PAGE_SIZE = 12;
-
-type Status = "resolved" | "review" | "demo" | "pending";
-
-export function resolutionStatus(result: Resolution | undefined, mode: "demo" | "live"): Status {
-  if (!result) return "pending";
-  if (mode === "demo") return "demo";
-  return result.decision === "review" ? "review" : "resolved";
-}
-
-function statusLabel(status: Status, result?: Resolution) {
-  if (status === "pending") return "Not run with Jev";
-  if (status === "demo") return "Demo only";
-  if (status === "review") return "Jev: needs review";
-  return `Jev: ${result?.decision}`;
-}
-
-function StatusBadge({ status, result }: { status: Status; result?: Resolution }) {
-  return <span className={`${styles.badge} ${styles[status]}`}>{statusLabel(status, result)}</span>;
-}
 
 function readable(value: string) {
   return value.trim() || "Not provided";
@@ -346,7 +328,7 @@ function PairCard({
         <span className={`${styles.badge} ${styles[pair.expected]}`}>
           Expected {pair.expected}
         </span>
-        <StatusBadge status={resolutionStatus(result, mode)} result={result} />
+        <ResolutionBadge result={result} mode={mode} />
       </div>
       <strong>
         {readable(pair.left.name)} <span aria-hidden="true">/</span>{" "}
@@ -397,7 +379,7 @@ function Comparison({
         <span className={`${styles.badge} ${styles[pair.expected]}`}>
           Expected {pair.expected}
         </span>
-        <StatusBadge status={resolutionStatus(result, mode)} result={result} />
+        <ResolutionBadge result={result} mode={mode} />
       </div>
       <p className={styles.scenario}>{pair.scenario}</p>
       <div className={styles.records}>

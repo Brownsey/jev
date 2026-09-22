@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import DatasetExplorer from "./dataset-explorer";
+import { ResolutionBadge } from "./resolution-badge";
 import { JEV_MODELS, isJevModel } from "../lib/models";
 import {
   DEFAULT_MODEL,
@@ -28,6 +29,7 @@ type Saved = {
   model: string;
   mode: "demo" | "live";
   results: Resolution[];
+  resolvedModels?: string[];
   elapsed?: number | null;
   usage?: { inputTokens: number | null; cost: number | null } | null;
 };
@@ -41,6 +43,9 @@ function validSaved(value: unknown): value is Saved {
   if (!value || typeof value !== "object") return false;
   const saved = value as Saved;
   const keys = new Set(FIELDS.map((field) => field.key));
+  const pairIds = Array.isArray(saved.dataset?.pairs)
+    ? new Set(saved.dataset.pairs.map((pair) => pair?.id))
+    : null;
   return (
     saved.version === 1 &&
     (saved.elapsed == null || nonnegative(saved.elapsed)) &&
@@ -67,8 +72,7 @@ function validSaved(value: unknown): value is Saved {
     ["demo", "live"].includes(saved.mode) &&
     Array.isArray(saved.dataset?.pairs) &&
     saved.dataset.pairs.length <= 500 &&
-    new Set(saved.dataset.pairs.map((pair) => pair?.id)).size ===
-      saved.dataset.pairs.length &&
+    pairIds?.size === saved.dataset.pairs.length &&
     saved.dataset.pairs.every(
       (pair) =>
         pair &&
@@ -93,7 +97,7 @@ function validSaved(value: unknown): value is Saved {
       (result) =>
         result &&
         typeof result.id === "string" &&
-        saved.dataset.pairs.some((pair) => pair.id === result.id) &&
+        pairIds?.has(result.id) &&
         decisions.includes(result.decision) &&
         decisions.includes(result.choice) &&
         Number.isFinite(result.confidence) &&
@@ -109,7 +113,14 @@ function validSaved(value: unknown): value is Saved {
             result.probabilities[key] >= 0 &&
             result.probabilities[key] <= 1,
         ),
-    )
+    ) &&
+    (saved.resolvedModels == null ||
+      (Array.isArray(saved.resolvedModels) &&
+        saved.resolvedModels.length <= 25 &&
+        new Set(saved.resolvedModels).size === saved.resolvedModels.length &&
+        saved.resolvedModels.every(
+          (model) => typeof model === "string" && model.length > 0 && model.length <= 200,
+        )))
   );
 }
 
@@ -145,6 +156,7 @@ export default function Page() {
   const [token, setToken] = useState("");
   const [config, setConfig] = useState<ConfigResponse | null>(null);
   const [results, setResults] = useState<Resolution[]>([]);
+  const [resolvedModels, setResolvedModels] = useState<string[]>([]);
   const [elapsed, setElapsed] = useState<number | null>(null);
   const [usage, setUsage] = useState<{
     inputTokens: number | null;
@@ -160,6 +172,7 @@ export default function Page() {
     controller.current?.abort();
     if (results.length) setNotice("Results need rerunning");
     setResults([]);
+    setResolvedModels([]);
     setElapsed(null);
     setUsage(null);
   };
@@ -185,6 +198,7 @@ export default function Page() {
         if (isJevModel(saved.model)) {
           setModel(saved.model);
           setResults(saved.results);
+          setResolvedModels(saved.resolvedModels ?? []);
           setElapsed(saved.elapsed ?? null);
           setUsage(saved.usage ?? null);
         } else {
@@ -221,6 +235,7 @@ export default function Page() {
           model,
           mode,
           results,
+          resolvedModels,
           elapsed,
           usage,
         } satisfies Saved),
@@ -238,6 +253,7 @@ export default function Page() {
     model,
     mode,
     results,
+    resolvedModels,
     elapsed,
     usage,
     hydrated,
@@ -297,11 +313,13 @@ export default function Page() {
     setRunning(true);
     setNotice("");
     setResults([]);
+    setResolvedModels([]);
     setElapsed(0);
     setUsage(null);
     const abort = new AbortController();
     controller.current = abort;
     const collected: Resolution[] = [];
+    const models = new Set<string>();
     let totalElapsed = 0;
     let inputTokens: number | null = 0;
     let cost: number | null = 0;
@@ -331,6 +349,8 @@ export default function Page() {
           );
         if (abort.signal.aborted) break;
         collected.push(...body.results);
+        if (mode === "live" && body.model && models.size < 25)
+          models.add(body.model);
         totalElapsed += body.elapsedMs;
         inputTokens =
           inputTokens === null || body.inputTokens === null
@@ -338,6 +358,7 @@ export default function Page() {
             : inputTokens + body.inputTokens;
         cost = cost === null || body.cost === null ? null : cost + body.cost;
         setResults([...collected]);
+        setResolvedModels([...models]);
         setElapsed(totalElapsed);
         setUsage({ inputTokens, cost });
       }
@@ -466,6 +487,7 @@ export default function Page() {
                 model,
                 mode,
                 results,
+                resolvedModels,
                 metrics,
                 elapsed,
                 usage,
@@ -531,7 +553,11 @@ export default function Page() {
               step="0.01"
               value={threshold}
               onChange={(event) =>
-                changeSetting(() => setThreshold(Number(event.target.value)))
+                changeSetting(() => {
+                  const value = Number(event.target.value);
+                  if (Number.isFinite(value))
+                    setThreshold(Math.min(1, Math.max(0, value)));
+                })
               }
             />
           </label>
@@ -727,11 +753,16 @@ export default function Page() {
                   <input
                     type="checkbox"
                     checked={fields.includes(field.key)}
+                    disabled={
+                      fields.length === 1 && fields.includes(field.key)
+                    }
                     onChange={() =>
                       changeSetting(() =>
                         setFields((current) =>
                           current.includes(field.key)
-                            ? current.filter((key) => key !== field.key)
+                            ? current.length === 1
+                              ? current
+                              : current.filter((key) => key !== field.key)
                             : [...current, field.key],
                         ),
                       )
@@ -742,6 +773,7 @@ export default function Page() {
               ))}
             </fieldset>
             <p className="hint">
+              Select at least one field. {" "}
               {mode === "demo"
                 ? "Demo compares field similarity only; instructions affect live Jev runs."
                 : "Jev evaluates the selected fields using these instructions."}
@@ -769,6 +801,9 @@ export default function Page() {
               {metrics.matched} matches · {metrics.different} different ·{" "}
               {metrics.review} for review
             </p>
+            {resolvedModels.length > 0 && (
+              <p className="usage">Run model: {resolvedModels.join(", ")}</p>
+            )}
             <div className="metric-grid">
               <Metric
                 label="Completed"
@@ -832,13 +867,6 @@ export default function Page() {
       </section>
     </main>
   );
-}
-
-function ResolutionBadge({ result, mode }: { result?: Resolution; mode: "demo" | "live" }) {
-  if (!result) return <span className="decision pending">Not run with Jev</span>;
-  if (mode === "demo") return <span className="decision demo">Demo only</span>;
-  if (result.decision === "review") return <span className="decision review">Jev: needs review</span>;
-  return <span className={`decision resolved ${result.decision}`}>Jev: {result.decision}</span>;
 }
 
 function Metric({ label, value }: { label: string; value: string }) {

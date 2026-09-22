@@ -307,11 +307,13 @@ code {
     700 10px Consolas,
     monospace;
 }
-.decision.match {
+.decision.match,
+.decision.resolved {
   background: #daf2eb;
   color: #076d61;
 }
-.decision.different {
+.decision.different,
+.decision.pending {
   background: #eff1f4;
   color: #526171;
 }
@@ -319,17 +321,9 @@ code {
   background: #fff2cf;
   color: #8b6400;
 }
-.decision.resolved {
-  background: #daf2eb;
-  color: #076d61;
-}
 .decision.demo {
   background: #e5efff;
   color: #245be8;
-}
-.decision.pending {
-  background: #eff1f4;
-  color: #526171;
 }
 .muted,
 .empty {

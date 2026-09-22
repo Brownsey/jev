@@ -237,22 +237,6 @@
   background: #eff1f4;
   color: #526171;
 }
-.resolved {
-  background: #daf2eb;
-  color: #076d61;
-}
-.review {
-  background: #fff2cf;
-  color: #8b6400;
-}
-.demo {
-  background: #e5efff;
-  color: #245be8;
-}
-.pending {
-  background: #eff1f4;
-  color: #526171;
-}
 .pagination {
   justify-content: center;
   margin-top: 12px;

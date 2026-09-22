@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { validateResolveRequest } from "../src/lib/jev";
-import { generateDataset, DEFAULT_MODEL } from "../src/lib/lab";
+import { liveResolve, validateResolveRequest } from "../src/lib/jev";
+import { generateDataset } from "../src/lib/lab";
 import { GET } from "../src/app/api/config/route";
 
 const request = (model: string) => ({
@@ -26,15 +26,39 @@ test("only listed Jev models can reach resolution", () => {
   }
 });
 
-test("config never advertises an unsupported default model", async () => {
-  const before = process.env.JEV_MODEL;
-  try {
-    process.env.JEV_MODEL = "unsupported-model";
-    assert.equal((await GET().json()).model, DEFAULT_MODEL);
-    process.env.JEV_MODEL = "~typesafe/jev-latest";
-    assert.equal((await GET().json()).model, "~typesafe/jev-latest");
-  } finally {
-    if (before === undefined) delete process.env.JEV_MODEL;
-    else process.env.JEV_MODEL = before;
+test("config exposes readiness only, without credentials or unused model settings", async () => {
+  const config = await GET().json();
+  assert.deepEqual(Object.keys(config).sort(), [
+    "accessRequired",
+    "configured",
+  ]);
+  assert.equal(typeof config.configured, "boolean");
+  assert.equal(typeof config.accessRequired, "boolean");
+});
+
+test("provider model metadata must fit saved workspace validation", async (t) => {
+  for (const model of ["", "x".repeat(201)]) {
+    const mock = t.mock.method(globalThis, "fetch", async () =>
+      Response.json({
+        model,
+        usage: { input_tokens: 1 },
+        answers: {
+          q0: {
+            type: "choice",
+            choice: "match",
+            confidence: 1,
+            probabilities: { match: 1, different: 0, review: 0 },
+          },
+        },
+      }),
+    );
+    await assert.rejects(
+      liveResolve(
+        validateResolveRequest(request("~typesafe/jev-latest"))!,
+        "test",
+      ),
+      /malformed/,
+    );
+    mock.mock.restore();
   }
 });

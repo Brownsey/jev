@@ -31,14 +31,15 @@ export function generateDataset(count: number, seed: number, country: Dataset["c
   const pairs: Pair[] = Array.from({ length: count }, (_, index) => {
     const selected = country === "Mixed" ? (Math.floor(index / 4) % 2 ? "Germany" : "UK") : country;
     const sites = selected === "Germany" ? DE : UK;
-    const left = project(sites[Math.floor(random() * sites.length)], selected, index);
+    const siteIndex = Math.floor(random() * sites.length);
+    const left = project(sites[siteIndex], selected, index);
     const kind = index % 4;
     const duplicate = kind === 0;
     let right: Project; let scenario: string;
     if (duplicate) { right = variant(left, selected, index % 8 === 0); scenario = "synthetic duplicate: abbreviation, paraphrase or omitted field"; }
     else if (kind === 1) { right = { ...left, address: changedHouse(left.address), reference: `${left.reference}-N` }; scenario = "synthetic hard negative: neighbouring address"; }
     else if (kind === 2) { right = { ...left, name: left.name.replace(/(Phase|Bauabschnitt) \d+/, selected === "Germany" ? "Bauabschnitt 4" : "Phase 4"), description: selected === "Germany" ? "Sanierung eines anderen Bauabschnitts." : "Refurbishment for a separate phase.", reference: `${left.reference}-P` }; scenario = "synthetic hard negative: same site, different phase/scope"; }
-    else { right = project(sites[(sites.indexOf(sites.find((site) => site.address === left.address)!) + 1) % sites.length], selected, index + 7); scenario = "synthetic clear negative"; }
+    else { right = project(sites[(siteIndex + 1) % sites.length], selected, index + 7); scenario = "synthetic clear negative"; }
     return { id: `pair-${Math.floor(random() * 0xffffffffff).toString(36).padStart(7, "0")}`, left, right, expected: duplicate ? "match" : "different", scenario };
   });
   for (let index = pairs.length - 1; index > 0; index--) { const swap = Math.floor(random() * (index + 1)); [pairs[index], pairs[swap]] = [pairs[swap], pairs[index]]; }

@@ -6,4 +6,4 @@ export type Dataset = { seed: number; country: "UK" | "Germany" | "Mixed"; pairs
 export type Resolution = { id: string; decision: Decision; choice: Decision; confidence: number; probabilities: Record<Decision, number> };
 export type ResolveRequest = { mode: "demo" | "live"; pairs: Pair[]; prompt: string; fields: ProjectField[]; threshold: number; model: string };
 export type ResolveResponse = { results: Resolution[]; mode: "demo" | "live"; elapsedMs: number; inputTokens: number | null; cost: number | null; model: string };
-export type ConfigResponse = { configured: boolean; accessRequired: boolean; model: string };
+export type ConfigResponse = { configured: boolean; accessRequired: boolean };
