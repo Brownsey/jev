@@ -1,6 +1,20 @@
-# Jev Resolution Lab
+# Jev entity-resolution showcase
 
-A local playground for testing whether two UK or German construction/planning records describe the same project. Generate labelled synthetic pairs, experiment with matching instructions and fields, and evaluate Jev through OpenRouter.
+A demonstration of turning messy UK and German construction/planning records into proposed entity groups. The home page shows collection-level discovery; the advanced pair lab at `/lab` retains prompt and field experiments. Both use the same bounded Jev integration through OpenRouter.
+
+## Collection showcase
+
+The home page starts with 18 fictional records, including projects appearing once, twice and three times. Choose up to 300 rows (generator ceiling 499), inspect their contents, and see the comparison budget before running. The five-row preset supports a small paid smoke test; it does not contain every group size.
+
+Local candidate selection uses project fields, never the separate evaluation labels. Its comparison cap controls how many decisions are requested; a small row count alone does not control all-pairs cost. Successful comparisons are retained for resume within the same experiment. Changing settings clears them.
+
+Confident match links produce proposed groups. Contradictory or review links remain flagged. A record with no match found is not a verified singleton: candidate selection and the cap can omit matches. Reveal ground truth to inspect candidate recall and pairwise group precision/recall over the full labelled collection, including missed candidates. Simulation uses the existing heuristic and is never evidence of Jev's accuracy.
+
+The showcase saves a compact versioned browser workspace separately from the legacy pair lab. It regenerates deterministic records from saved parameters and retains completed results. Export an experiment for its records, settings, candidates, predictions, groups and evaluation. Credentials are never persisted or exported.
+
+## What this demonstrates
+
+Jev's Choice interface returns a defined decision, a probability for each option and a separate confidence value. This makes the match/different/review policy and its threshold explicit. Chat LLMs can also return structured output; choosing between approaches requires measured accuracy, latency and cost on the same representative data. This app reports actual run metadata when available and does not invent a comparison or treat synthetic results as proof of superiority. See the [Choice documentation](https://docs.typesafe.ai/primitives/choice) and [OpenRouter comparison example](https://openrouter.ai/labs/jev/compile).
 
 ## Run locally
 
@@ -20,7 +34,7 @@ OPENROUTER_API_KEY=your-openrouter-key
 
 Never use a `NEXT_PUBLIC_` variable for this key. It is used only by the server and is never included in exports. Live runs send selected synthetic record fields to OpenRouter and consume your account credits.
 
-## Try an experiment
+## Try an advanced pair experiment at `/lab`
 
 1. Generate a mixed, UK-only, or Germany-only dataset with a repeatable seed.
 2. Inspect both project records and the evaluation label. Cases include paraphrases, abbreviated addresses, missing fields, nearby buildings and different phases.
@@ -86,7 +100,7 @@ Balanced example: “Recognise paraphrases, UK street abbreviations, Straße/Str
 
 Address-first example: “Prioritise country, city, postcode, street and building/unit number. Verify that the project scope and phase remain compatible; the same address can contain separate projects.”
 
-## Evaluation and storage
+## Pair-lab evaluation and storage
 
 After generating pairs, click **Explore dataset** to see country and scenario breakdowns, expected answers and field completeness. Search across project fields, filter UK/Germany, and browse cards in pages of 12. Open a card for the full pair of records, including missing values. This view uses the current saved dataset and does not run the model or change your evaluation.
 
@@ -96,7 +110,7 @@ Use **Resolution status** to view pairs resolved by Jev, unresolved pairs, cases
 
 Accuracy is correct final decisions divided by completed pairs; review counts as unresolved, not correct. Precision is true matches divided by predicted matches. Recall is true matches divided by actual matches among completed pairs. Coverage is non-review decisions divided by completed pairs. Undefined ratios display as unavailable. Partial runs are evaluated only over completed pairs.
 
-This is a **pairwise benchmark**, not an exhaustive database deduplication or clustering system. Pair generation avoids the cost of testing every possible record combination. Synthetic scores do not substitute for a held-out, human-labelled real-world evaluation set.
+The advanced lab is a **pairwise benchmark**. The home-page showcase discovers proposed groups from a collection using bounded candidates; neither flow is exhaustive production deduplication. Synthetic scores do not substitute for a held-out, human-labelled real-world evaluation set.
 
 The browser saves a versioned local workspace. It is device/browser-specific, not shared cloud storage. Export JSON for an external copy. API keys are server environment variables; any app access token entered in the UI stays in memory. Changing experiment settings clears the old results to avoid presenting stale scores.
 

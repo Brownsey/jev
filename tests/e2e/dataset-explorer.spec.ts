@@ -4,7 +4,7 @@ import type { Dataset } from "../../src/lib/types";
 test("explores actual UK and German records without changing the saved evaluation", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/lab");
   const disclosure = page
     .locator("summary")
     .filter({ hasText: "Explore dataset" });
@@ -109,7 +109,7 @@ test("bounds large dataset cards and supports mobile browsing and pagination", a
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("500");
   await page.getByRole("button", { name: "Generate pairs" }).click();
   await page.locator("summary").filter({ hasText: "Explore dataset" }).click();

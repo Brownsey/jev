@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("generates a mixed dataset and resolves it in clearly labelled demo mode", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/lab");
   await expect(page.getByRole("heading", { name: "resolution lab" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Dataset controls" }).getByLabel("Country")).toHaveValue("Mixed");
 
@@ -15,7 +15,7 @@ test("generates a mixed dataset and resolves it in clearly labelled demo mode", 
 });
 
 test("invalidates prior results when a resolution setting changes", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("20");
   await page.getByRole("button", { name: "Generate pairs" }).click();
   await page.getByRole("button", { name: "Run demo" }).click();

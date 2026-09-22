@@ -11,7 +11,7 @@ test("independent: real demo survives boundary edits and reload on desktop and m
     if (request.url().endsWith("/api/resolve")) batches.push(request.postDataJSON().pairs.length);
   });
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("40");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   const before = await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).dataset, store);
@@ -62,7 +62,7 @@ test("independent: actual models from different live batches survive export and 
       })),
     } });
   });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("60");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   await page.getByLabel("Model", { exact: true }).selectOption("~typesafe/jev-latest");

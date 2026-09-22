@@ -46,9 +46,9 @@ Ordinary substantive UI change: read-only view of the existing active dataset, w
 
 Visual direction: preserve the existing typography and blue/teal palette. A broad clickable dataset summary expands into proportional data bars, compact pair cards and a side-by-side record comparison; stack all panels on mobile. Use real field values, not fabricated maps or photography.
 
-## Revised showcase goal — research captured, implementation pending
+## Revised showcase goal — research and collection showcase
 
-The user clarified that datasets must contain individual records forming singletons, duplicate pairs and triples, with fewer than 500 input rows and inexpensive inference. This supersedes preset pair generation as the intended main showcase. The deployed app still uses preset pairs. See DATASET-RESEARCH.md for verified free sources, a 190-row labelled sample option, a 300-row UK/Germany synthetic composition, candidate-comparison budgeting and cluster evaluation requirements.
+The user clarified that datasets must contain individual records forming singletons, duplicate pairs and triples, with fewer than 500 input rows and inexpensive inference. This supersedes preset pair generation as the intended main showcase. The collection iteration is specified in SHOWCASE.md; it makes `/` the discovery experience and retains `/lab` for pair experiments. See DATASET-RESEARCH.md for verified free sources, sample options and comparison-budget considerations.
 
 ## Model selection and resolution visibility — contract v1.3
 

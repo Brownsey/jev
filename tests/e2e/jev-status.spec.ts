@@ -36,7 +36,7 @@ async function setup(page: import("@playwright/test").Page) {
       },
     });
   });
-  await page.goto("/");
+  await page.goto("/lab");
 }
 
 test("model dropdown offers only Jev models and changing it invalidates results", async ({ page }) => {

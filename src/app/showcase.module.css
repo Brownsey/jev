@@ -1,0 +1,627 @@
+.shell {
+  --ink: #192b3c;
+  --blue: #245be8;
+  --teal: #087c76;
+  --cloud: #f5f7fa;
+  --amber: #8b6400;
+  --muted: #637486;
+  --line: #dce4ec;
+  min-height: 100vh;
+  padding: 46px clamp(18px, 4vw, 68px) 72px;
+  background: var(--cloud);
+  color: var(--ink);
+  font:
+    14px/1.5 "Segoe UI",
+    sans-serif;
+}
+.shell * {
+  box-sizing: border-box;
+}
+.skip {
+  position: fixed;
+  top: -80px;
+  left: 12px;
+  z-index: 10;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--blue);
+}
+.skip:focus {
+  top: 10px;
+}
+.hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  max-width: 1540px;
+  margin: 0 auto 30px;
+}
+.hero > div:first-child {
+  max-width: 930px;
+}
+.hero h1 {
+  max-width: 850px;
+  margin: 5px 0 12px;
+  font:
+    700 clamp(40px, 6vw, 78px)/0.97 "Trebuchet MS",
+    sans-serif;
+  letter-spacing: -0.062em;
+}
+.intro {
+  max-width: 700px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+}
+.heroMeta {
+  display: grid;
+  justify-items: end;
+  gap: 14px;
+  padding-top: 10px;
+  white-space: nowrap;
+}
+.heroMeta > strong {
+  color: var(--muted);
+  font:
+    700 10px Consolas,
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.heroMeta a,
+.links a {
+  color: var(--blue);
+  font-weight: 650;
+}
+.simulation,
+.live {
+  border-radius: 99px;
+  padding: 6px 9px;
+  font:
+    700 11px Consolas,
+    monospace;
+}
+.simulation {
+  background: #e6edff;
+  color: var(--blue);
+}
+.live {
+  background: #dff2ee;
+  color: var(--teal);
+}
+.eyebrow {
+  margin: 0 0 3px;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font:
+    700 10px Consolas,
+    monospace;
+}
+.notice,
+.warning {
+  max-width: 1540px;
+  margin: 0 auto 12px;
+  padding: 10px 13px;
+  background: #e7efff;
+  border-left: 3px solid var(--blue);
+}
+.warning {
+  background: #fff4d7;
+  border-color: var(--amber);
+  color: #674b00;
+}
+.controls,
+.settings,
+.flow,
+.evidenceGrid,
+.inspector {
+  max-width: 1540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.controls,
+.settings {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.settings {
+  margin-top: 9px;
+  align-items: end;
+}
+.shell label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.shell input,
+.shell select,
+.shell textarea,
+.shell button {
+  color: var(--ink);
+  font: inherit;
+}
+.shell input,
+.shell select,
+.shell textarea {
+  border: 1px solid #cad5e0;
+  border-radius: 5px;
+  background: #fff;
+  padding: 8px;
+}
+.shell button {
+  border: 1px solid #cbd6e0;
+  border-radius: 6px;
+  background: #fff;
+  padding: 8px 11px;
+  cursor: pointer;
+}
+.shell button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+.shell button:hover:not(:disabled) {
+  border-color: #9babc0;
+}
+.shell :is(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid #8fafff;
+  outline-offset: 3px;
+}
+.primary {
+  background: var(--blue) !important;
+  border-color: var(--blue) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+.plan {
+  display: grid;
+  gap: 1px;
+  margin-left: auto;
+  padding: 3px 6px;
+  text-align: right;
+}
+.plan strong {
+  font:
+    700 14px Consolas,
+    monospace;
+}
+.plan span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.runActions {
+  display: flex;
+  gap: 6px;
+}
+.context {
+  flex: 1 1 100%;
+  margin: 1px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.flow {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.9fr) 92px minmax(420px, 1.1fr);
+  gap: 0;
+  align-items: stretch;
+  margin-top: 18px;
+}
+.source,
+.entities,
+.panel,
+.inspector {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.panelHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.panelHead h2,
+.panel h2,
+.inspector h2 {
+  margin: 0;
+  font:
+    700 22px/1.1 "Trebuchet MS",
+    sans-serif;
+  letter-spacing: -0.025em;
+}
+.panelHead > span {
+  min-width: 32px;
+  border-radius: 50%;
+  padding: 6px;
+  background: var(--cloud);
+  text-align: center;
+  font:
+    700 12px Consolas,
+    monospace;
+}
+.search {
+  width: 100%;
+  margin: 15px 0 10px;
+}
+.recordList,
+.groupList {
+  max-height: 575px;
+  overflow: auto;
+  padding-right: 3px;
+}
+.recordCard {
+  border-top: 1px solid var(--line);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 68px;
+}
+.recordCard summary {
+  display: grid;
+  grid-template-columns: 88px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 3px;
+  cursor: pointer;
+}
+.recordCard summary::marker {
+  color: var(--blue);
+}
+.recordCard code,
+.groupTop code,
+.inspector code {
+  color: var(--blue);
+  font:
+    11px Consolas,
+    monospace;
+}
+.recordCard summary span {
+  font-weight: 650;
+}
+.recordCard summary small,
+.groupCard small {
+  color: var(--muted);
+}
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  padding: 5px 4px 14px;
+}
+.fields div {
+  min-width: 0;
+}
+.fields b {
+  display: block;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 9px;
+}
+.fields span {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+.arrow {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 4px;
+  color: var(--blue);
+  text-align: center;
+}
+.arrow span,
+.arrow small {
+  max-width: 80px;
+  color: var(--muted);
+  font:
+    10px Consolas,
+    monospace;
+}
+.arrow b {
+  font:
+    400 32px "Trebuchet MS",
+    sans-serif;
+}
+.filters {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0 5px;
+}
+.filters label {
+  flex: 1;
+}
+.groupSummary,
+.empty {
+  margin: 10px 0;
+  padding: 9px;
+  background: var(--cloud);
+  color: var(--muted);
+  font-size: 12px;
+}
+.groupCard {
+  display: grid;
+  width: 100%;
+  gap: 4px;
+  margin-top: 7px;
+  padding: 12px !important;
+  border-left: 3px solid #aebbc8 !important;
+  text-align: left;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 92px;
+}
+.groupCard.pending {
+  border-left-color: #aebbc8 !important;
+}
+.groupCard.linked {
+  border-left-color: var(--teal) !important;
+}
+.groupCard.review {
+  border-left-color: var(--amber) !important;
+}
+.groupCard.unlinked {
+  border-left-color: #68798b !important;
+}
+.groupCard.selected {
+  box-shadow: 0 0 0 2px #aec2fa;
+}
+.groupTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.groupTop em {
+  color: var(--muted);
+  font:
+    700 10px Consolas,
+    monospace;
+  font-style: normal;
+}
+.groupCard > strong {
+  font:
+    700 14px "Trebuchet MS",
+    sans-serif;
+}
+.conflict {
+  width: fit-content;
+  padding: 2px 5px;
+  background: #fff1c9;
+  color: var(--amber);
+  font:
+    700 10px Consolas,
+    monospace;
+}
+.inspector {
+  margin-top: 18px;
+  border-top: 3px solid var(--blue);
+}
+.memberGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+.memberGrid article {
+  min-width: 0;
+  padding: 13px;
+  background: var(--cloud);
+}
+.memberGrid h3 {
+  margin: 5px 0 7px;
+  font:
+    700 15px "Trebuchet MS",
+    sans-serif;
+}
+.memberGrid .fields {
+  grid-template-columns: 1fr;
+}
+.edges {
+  margin-top: 16px;
+}
+.edges h3 {
+  font-family: "Trebuchet MS", sans-serif;
+}
+.edges > div {
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) auto auto minmax(280px, 1fr);
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px solid var(--line);
+}
+.edges strong {
+  color: var(--teal);
+  text-transform: uppercase;
+  font:
+    700 10px Consolas,
+    monospace;
+}
+.edges small {
+  color: var(--muted);
+}
+.evidenceGrid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+.panel > label {
+  margin-top: 15px;
+}
+.panel textarea {
+  width: 100%;
+  min-height: 104px;
+  resize: vertical;
+}
+.panel fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+  margin: 13px 0 0;
+  padding: 0;
+  border: 0;
+}
+.panel legend {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.check {
+  display: inline-flex !important;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  color: var(--ink) !important;
+  font-size: 12px !important;
+}
+.check input {
+  accent-color: var(--blue);
+}
+.fine {
+  color: var(--muted);
+  font-size: 12px;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+}
+.metrics > div {
+  padding: 10px;
+  background: var(--cloud);
+}
+.metrics span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+}
+.metrics strong {
+  font:
+    700 16px Consolas,
+    monospace;
+}
+.truth {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.truth p,
+.actual {
+  color: var(--teal);
+  font-size: 12px;
+}
+.truthList {
+  max-height: 165px;
+  margin-top: 10px;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+}
+.truthList div {
+  display: grid;
+  grid-template-columns: 95px 1fr;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+}
+.truthList code {
+  color: var(--blue);
+}
+.export {
+  margin-top: 12px;
+}
+@media (max-width: 1050px) {
+  .flow {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .arrow {
+    grid-template-columns: auto auto auto;
+    padding: 2px;
+  }
+  .arrow b {
+    transform: rotate(90deg);
+  }
+  .source,
+  .entities {
+    min-height: 360px;
+  }
+  .recordList,
+  .groupList {
+    max-height: 400px;
+  }
+  .memberGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .edges > div {
+    grid-template-columns: 1fr auto;
+  }
+}
+@media (max-width: 720px) {
+  .shell {
+    padding: 24px 12px 44px;
+  }
+  .hero {
+    display: block;
+  }
+  .hero h1 {
+    font-size: 43px;
+  }
+  .intro {
+    font-size: 15px;
+  }
+  .heroMeta {
+    justify-items: start;
+    margin-top: 18px;
+  }
+  .plan {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+  .controls label,
+  .settings label {
+    flex: 1 1 125px;
+  }
+  .runActions {
+    width: 100%;
+  }
+  .runActions button {
+    flex: 1;
+  }
+  .evidenceGrid,
+  .memberGrid {
+    grid-template-columns: 1fr;
+  }
+  .source,
+  .entities,
+  .panel,
+  .inspector {
+    padding: 15px;
+  }
+  .recordCard summary {
+    grid-template-columns: 78px 1fr;
+  }
+  .recordCard summary small {
+    grid-column: 2;
+  }
+  .fields {
+    grid-template-columns: 1fr;
+  }
+  .edges > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

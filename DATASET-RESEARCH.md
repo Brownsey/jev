@@ -1,10 +1,10 @@
 # Entity-resolution showcase: dataset research
 
-Research date: 22 September 2026. This records the user's revised goal and a shortlist; these datasets and the clustering flow are not yet implemented.
+Research date: 22 September 2026. This records the source shortlist. The collection showcase now implements synthetic UK/Germany records, bounded candidate selection and proposed entity groups; the external datasets below remain research options, not bundled benchmarks.
 
 ## Revised goal
 
-Show entity discovery across a collection of individual records. Include records with no counterpart (singletons), duplicate pairs, triples, and confusing but distinct projects. The current app evaluates preconstructed pairs and does not yet demonstrate this complete workflow. Dataset limits must count input rows, not pair comparisons.
+Show entity discovery across a collection of individual records. Include records with no counterpart (singletons), duplicate pairs, triples, and confusing but distinct projects. The home-page showcase implements this workflow; `/lab` retains preconstructed pair experiments. Dataset limits count input rows, separately from comparison limits.
 
 Keep UK and Germany construction/planning as the main domain. Suggested generated preset: 300 rows representing 170 entities: 80 singletons, 50 groups of two, 40 groups of three. Split the preset evenly across UK/Germany. Generate local deterministic variations in descriptions, developer names, addresses, missing fields and phase notation, retaining hard negatives at the same/nearby site. Store private evaluation entity IDs separately; never send them, scenarios or duplicate counts to Jev.
 
@@ -30,7 +30,7 @@ No ready-made, labelled UK/Germany construction-project clustering benchmark was
 4. Show inferred entity groups with singletons, pairs and triples; distinguish unresolved records from confirmed nonmatches. Flag contradictory links rather than blindly merging every connected chain.
 5. Reveal ground truth only for evaluation. Report missed matches from candidate selection as well as matching/clustering errors; untested pairs are not verified negatives. Label singleton status as 'no match found' where candidate coverage is incomplete.
 
-These are implementation requirements for the next app change, not descriptions of the current deployed behavior. No paid model calls were made during this research.
+The synthetic showcase follows this flow with 18 rows by default, up to 300 in the UI (499 generator ceiling), a separate comparison cap, retained completed comparisons for resume, conflict flags and collection-wide recall denominators. Its composition repeats groups of three, two and one rather than the earlier proposed 300-row mix. Sampling and importing the external benchmarks above remain optional future work. No paid model calls were made during this research.
 
 ## Sources
 

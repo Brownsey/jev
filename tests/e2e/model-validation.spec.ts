@@ -24,7 +24,7 @@ test("independent: partial live status filters preserve results and coherent sel
       }),
     } }).catch(() => {});
   });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("60");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   await page.getByLabel("Mode", { exact: true }).selectOption("live");
@@ -80,7 +80,7 @@ test("independent: mobile real demo, keyboard model selection and stale-model re
   await page.setViewportSize({ width: 390, height: 844 });
   const errors: string[] = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/lab");
   const model = page.getByRole("combobox", { name: "Model", exact: true });
   await model.focus();
   await page.keyboard.press("ArrowDown");

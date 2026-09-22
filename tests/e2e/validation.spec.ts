@@ -6,7 +6,7 @@ test("validation: real backend batches, persists, exports and supports keyboard 
   const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
   const counts: number[] = []; page.on("request", request => { if (request.url().endsWith("/api/resolve")) counts.push(request.postDataJSON().pairs.length); });
   await page.setViewportSize({ width: 1440, height: 1080 });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("40");
   await page.getByLabel("Seed", { exact: true }).fill("4242");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
@@ -40,7 +40,7 @@ test("validation: real backend batches, persists, exports and supports keyboard 
 
 test("validation: fractional generator inputs show actionable validation and retain dataset", async ({ page }) => {
   const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("20");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   await expect(page.getByRole("row")).toHaveCount(21);
@@ -67,7 +67,7 @@ test("validation: cancel retains completed real backend batch and stops more bat
     if (count === 2) await gate;
     await route.fulfill({ response }).catch(() => {});
   });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("60");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   await page.getByRole("button", { name: "Run demo", exact: true }).click();
@@ -85,7 +85,7 @@ test("validation: cancel retains completed real backend batch and stops more bat
 
 test("validation: token stays in memory and storage failures stay visible", async ({ page }) => {
   await page.route("**/api/config", route => route.fulfill({ json: { configured: false, accessRequired: true, model: "typesafe/jev-1.13" } }));
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Access token").fill("isolated-validation-access-secret");
   await page.getByLabel("Pair count").fill("20");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
@@ -100,7 +100,7 @@ test("validation: token stays in memory and storage failures stay visible", asyn
 test("validation: malformed saved workspace is nonfatal", async ({ page }) => {
   const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
   await page.addInitScript(key => localStorage.setItem(key, JSON.stringify({ version: 1, dataset: { seed: 1, country: "Mixed", pairs: [{}] }, fields: ["name"], results: [], prompt: "bad", threshold: .7, mode: "demo", model: "typesafe/jev-1.13" })), store);
-  await page.goto("/");
+  await page.goto("/lab");
   await expect(page.getByRole("heading", { name: "resolution lab", exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   await expect(page.getByRole("row")).toHaveCount(81);
@@ -108,7 +108,7 @@ test("validation: malformed saved workspace is nonfatal", async ({ page }) => {
 });
 
 test("validation: duplicate saved results cannot inflate evaluation", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByLabel("Pair count").fill("20");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   await page.getByRole("button", { name: "Run demo", exact: true }).click();
@@ -121,7 +121,7 @@ test("validation: duplicate saved results cannot inflate evaluation", async ({ p
 
 test("validation: Germany mobile view, empty search, labels and no page overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/lab");
   await page.getByRole("region", { name: "Dataset controls" }).getByLabel("Country", { exact: true }).selectOption("Germany");
   await page.getByLabel("Pair count").fill("20");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();

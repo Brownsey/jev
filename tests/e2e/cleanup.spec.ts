@@ -25,7 +25,7 @@ async function setup(page: import("@playwright/test").Page) {
       },
     });
   });
-  await page.goto("/");
+  await page.goto("/lab");
 }
 
 test("valid settings preserve generated data and resolved run models", async ({ page }) => {
