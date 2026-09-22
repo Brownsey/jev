@@ -92,6 +92,10 @@ Address-first example: “Prioritise country, city, postcode, street and buildin
 
 After generating pairs, click **Explore dataset** to see country and scenario breakdowns, expected answers and field completeness. Search across project fields, filter UK/Germany, and browse cards in pages of 12. Open a card for the full pair of records, including missing values. This view uses the current saved dataset and does not run the model or change your evaluation.
 
+The model dropdown lists Jev 1.13 and Jev Latest from [OpenRouter's TypeSafe listing](https://openrouter.ai/typesafe), verified 22 September 2026. Jev Latest uses the alias `~typesafe/jev-latest`. The server accepts only the listed model IDs. An obsolete saved model resets to the pinned default and clears its stale results.
+
+Use **Resolution status** to view pairs resolved by Jev, unresolved pairs, cases needing review or demo-only results. Live match/different decisions count as resolved; review decisions remain unresolved. Text labels and colour distinguish these states on dataset cards and in the pair queue. Ground-truth labels are shown separately from model decisions. Partial runs retain and highlight only completed results; changing experiment settings clears those results.
+
 Accuracy is correct final decisions divided by completed pairs; review counts as unresolved, not correct. Precision is true matches divided by predicted matches. Recall is true matches divided by actual matches among completed pairs. Coverage is non-review decisions divided by completed pairs. Undefined ratios display as unavailable. Partial runs are evaluated only over completed pairs.
 
 This is a **pairwise benchmark**, not an exhaustive database deduplication or clustering system. Pair generation avoids the cost of testing every possible record combination. Synthetic scores do not substitute for a held-out, human-labelled real-world evaluation set.
@@ -114,6 +118,8 @@ The app uses standard Next.js routes and needs no database. The `jev` project in
 `JEV_ACCESS_TOKEN` is configured as a secret in Production and Preview. Its local copy is in the ignored `.env.vercel-access.local` file. Paste that value into the hosted app's **Access token** field; it stays in browser memory. Never commit the file or share the token publicly.
 
 Add `OPENROUTER_API_KEY` to the desired environment in [Vercel project settings](https://vercel.com/stephen-brownseys-projects/jev/settings/environment-variables), then redeploy for the new value to take effect. Select **Live** in the app to use Jev. Demo mode needs no provider key. Hosted live requests fail closed without the app access token, preventing a public owner-funded API proxy. This is a personal lab, not a multi-user service with accounts or quotas.
+
+These are separate credentials: `OPENROUTER_API_KEY` is the provider key, while `JEV_ACCESS_TOKEN` is an app password you choose. Do not use the provider key as the app password or enter it into the browser.
 
 ## Primary references
 

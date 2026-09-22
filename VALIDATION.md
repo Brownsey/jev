@@ -34,3 +34,15 @@ Explorer checks cover keyboard disclosure, actual country counts and field compl
 Independent runtime/source validation passed with no Critical or Important findings. At seed 876543, 500 pairs produced UK 252/Germany 248, expected match 125/different 375, four scenarios with 125 pairs each, and 7,937/8,000 provided values. All 16 populated record fields were individually searched; scenario search, pagination/filter/regeneration reset, keyboard focus and unchanged storage passed. Desktop 1440px and mobile 390px screenshots were inspected, with no page errors or horizontal overflow. Evidence is retained under ignored `.artifacts/explorer-review/`.
 
 A distinct final read-only reviewer approved the staged production/test snapshot with no findings. Deployment and hosted browser verification follow the commit through the existing Vercel Git integration.
+
+## Jev model selection and resolution visibility
+
+Base revision: `cae176e84b9f96ed36428adeec0580ea36d3e39f`. Requirements M1–M5 in DELIVERY.md. Registry verified against OpenRouter's TypeSafe listing and public model metadata: pinned `typesafe/jev-1.13` and latest alias `~typesafe/jev-latest`.
+
+Typecheck, production build and all 24 unit/API tests passed. All 16 browser cases passed across the unchanged 11-case regression suite, three new UI-owner cases and two independent cases. No cases skipped. Unsupported model IDs are rejected at the HTTP boundary without provider transport; the latest alias is forwarded unchanged in a controlled adapter test.
+
+Independent validation exercised partial live results using mocked transport (14 resolved, 6 needing review, 40 not run), cancellation, exact filter counts, intersecting search/country/status, paging/selection, native keyboard controls, invalidation and reload, including unsupported saved-model migration. A real local-backend demo verified that simulated results remain distinct. Desktop 1440px and mobile 390px screenshots were inspected with no overflow or Important/Critical findings. Artifacts: `.artifacts/model-validation-desktop.png` and `-mobile.png`. A test-only ambiguous locator was scoped to cards before its two cases were rerun successfully.
+
+Paid inference was not performed: Vercel had only `JEV_ACCESS_TOKEN`, with no `OPENROUTER_API_KEY`, and its sensitive secret cannot be pulled. The user was asked to configure the provider key separately. A guarded four-record/two-pair/one-request smoke script is prepared in ignored local artifacts, with no automatic retry. No model charges incurred by these checks; mocked-live screenshots are not evidence of paid Jev accuracy.
+
+A distinct read-only final reviewer approved this staged snapshot with no actionable findings. The updated empty-state wording explicitly includes the resolution-status filter.

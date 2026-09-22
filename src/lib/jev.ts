@@ -1,5 +1,6 @@
 import type { Decision, Pair, Resolution, ResolveRequest, ResolveResponse } from "./types";
 import { buildJevRequest } from "./lab";
+import { isJevModel } from "./models";
 
 const choices: Decision[] = ["match", "different", "review"];
 const isDecision = (value: unknown): value is Decision => typeof value === "string" && choices.includes(value as Decision);
@@ -16,6 +17,7 @@ export function validateResolveRequest(input: unknown): ResolveRequest | null {
   if (!input || typeof input !== "object") return null; const value = input as Record<string, unknown>;
   if ((value.mode !== "demo" && value.mode !== "live") || typeof value.prompt !== "string" || value.prompt.length > 8000 || typeof value.model !== "string" || value.model.length > 200 || typeof value.threshold !== "number" || value.threshold < 0 || value.threshold > 1 || !Array.isArray(value.fields) || !value.fields.length || !Array.isArray(value.pairs) || !value.pairs.length || value.pairs.length > 20) return null;
   const validFields = new Set(["name", "description", "address", "postcode", "city", "country", "developer", "reference"]);
+  if (!isJevModel(value.model as string)) return null;
   if (!value.fields.every((field) => typeof field === "string" && validFields.has(field))) return null;
   const ids = new Set<string>();
   for (const pair of value.pairs) { const p = pair as Pair; if (!p || typeof p.id !== "string" || !p.id || ids.has(p.id) || !p.left || !p.right) return null; ids.add(p.id); for (const side of [p.left, p.right]) for (const field of validFields) if (typeof side[field as keyof typeof side] !== "string" || side[field as keyof typeof side].length > 2000) return null; }

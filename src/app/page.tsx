@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import DatasetExplorer from "./dataset-explorer";
+import { JEV_MODELS, isJevModel } from "../lib/models";
 import {
   DEFAULT_MODEL,
   FIELDS,
@@ -181,11 +182,16 @@ export default function Page() {
         setPrompt(saved.prompt);
         setFields(saved.fields);
         setThreshold(saved.threshold);
-        setModel(saved.model);
+        if (isJevModel(saved.model)) {
+          setModel(saved.model);
+          setResults(saved.results);
+          setElapsed(saved.elapsed ?? null);
+          setUsage(saved.usage ?? null);
+        } else {
+          setModel(DEFAULT_MODEL);
+          setNotice("Saved model is no longer supported. Results were reset.");
+        }
         setMode(saved.mode);
-        setResults(saved.results);
-        setElapsed(saved.elapsed ?? null);
-        setUsage(saved.usage ?? null);
         setSelected(saved.dataset.pairs[0]?.id ?? null);
       } else if (saved)
         setStorageError("Saved workspace was invalid and was not restored.");
@@ -469,7 +475,7 @@ export default function Page() {
             Export evaluation
           </button>
         </section>
-        <DatasetExplorer dataset={dataset} />
+        <DatasetExplorer dataset={dataset} results={results} mode={mode} />
         <section className="settings">
           <div>
             <label>
@@ -495,20 +501,24 @@ export default function Page() {
             )}
             {mode === "live" && !config?.configured && (
               <p className="hint">
-                Live provider is not configured on this server.
+                Live provider is not configured. Add OPENROUTER_API_KEY in Vercel, then redeploy.
               </p>
             )}
           </div>
           <label>
             Model
-            <input
+            <select
               aria-label="Model"
               disabled={running}
               value={model}
               onChange={(event) =>
                 changeSetting(() => setModel(event.target.value))
               }
-            />
+            >
+              {JEV_MODELS.map((option) => (
+                <option key={option.id} value={option.id}>{option.label}</option>
+              ))}
+            </select>
           </label>
           <label>
             Review threshold
@@ -533,7 +543,7 @@ export default function Page() {
                 type="password"
                 value={token}
                 onChange={(event) => setToken(event.target.value)}
-                placeholder="Memory only"
+                placeholder="App access password (memory only)"
               />
             </label>
           )}
@@ -604,13 +614,7 @@ export default function Page() {
                           <small>{item.right.address}</small>
                         </td>
                         <td>
-                          {result ? (
-                            <span className={`decision ${result.decision}`}>
-                              {result.decision}
-                            </span>
-                          ) : (
-                            <span className="muted">Pending</span>
-                          )}
+                          <ResolutionBadge result={result} mode={mode} />
                         </td>
                       </tr>
                     );
@@ -828,6 +832,13 @@ export default function Page() {
       </section>
     </main>
   );
+}
+
+function ResolutionBadge({ result, mode }: { result?: Resolution; mode: "demo" | "live" }) {
+  if (!result) return <span className="decision pending">Not run with Jev</span>;
+  if (mode === "demo") return <span className="decision demo">Demo only</span>;
+  if (result.decision === "review") return <span className="decision review">Jev: needs review</span>;
+  return <span className={`decision resolved ${result.decision}`}>Jev: {result.decision}</span>;
 }
 
 function Metric({ label, value }: { label: string; value: string }) {

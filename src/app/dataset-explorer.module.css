@@ -33,6 +33,10 @@
   gap: 12px;
   justify-content: space-between;
 }
+.cardTop,
+.comparisonHeader {
+  flex-wrap: wrap;
+}
 .header {
   align-items: flex-start;
 }
@@ -70,6 +74,11 @@
   gap: 10px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   margin: 16px 0;
+}
+.statusSummary {
+  color: #66778a;
+  font: 11px Consolas, monospace;
+  margin: 8px 0;
 }
 .statPanel,
 .browser,
@@ -225,6 +234,22 @@
   color: #076d61;
 }
 .different {
+  background: #eff1f4;
+  color: #526171;
+}
+.resolved {
+  background: #daf2eb;
+  color: #076d61;
+}
+.review {
+  background: #fff2cf;
+  color: #8b6400;
+}
+.demo {
+  background: #e5efff;
+  color: #245be8;
+}
+.pending {
   background: #eff1f4;
   color: #526171;
 }

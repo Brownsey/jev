@@ -2,10 +2,29 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { FIELDS } from "../lib/lab";
-import type { Dataset, Pair } from "../lib/types";
+import type { Dataset, Pair, Resolution } from "../lib/types";
 import styles from "./dataset-explorer.module.css";
 
 const PAGE_SIZE = 12;
+
+type Status = "resolved" | "review" | "demo" | "pending";
+
+export function resolutionStatus(result: Resolution | undefined, mode: "demo" | "live"): Status {
+  if (!result) return "pending";
+  if (mode === "demo") return "demo";
+  return result.decision === "review" ? "review" : "resolved";
+}
+
+function statusLabel(status: Status, result?: Resolution) {
+  if (status === "pending") return "Not run with Jev";
+  if (status === "demo") return "Demo only";
+  if (status === "review") return "Jev: needs review";
+  return `Jev: ${result?.decision}`;
+}
+
+function StatusBadge({ status, result }: { status: Status; result?: Resolution }) {
+  return <span className={`${styles.badge} ${styles[status]}`}>{statusLabel(status, result)}</span>;
+}
 
 function readable(value: string) {
   return value.trim() || "Not provided";
@@ -42,13 +61,15 @@ function Bar({
   );
 }
 
-export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
+export default function DatasetExplorer({ dataset, results, mode }: { dataset: Dataset; results: Resolution[]; mode: "demo" | "live" }) {
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState<"All" | "UK" | "Germany">("All");
+  const [statusFilter, setStatusFilter] = useState<"all" | "resolved" | "unresolved" | "review" | "demo">("all");
   const [page, setPage] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const comparisonRef = useRef<HTMLElement>(null);
   const pairs = dataset.pairs;
+  const byId = useMemo(() => new Map(results.map((result) => [result.id, result])), [results]);
   const normalizedQuery = query.trim().toLowerCase();
   const filtered = useMemo(
     () =>
@@ -62,10 +83,14 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
           .toLowerCase();
         return (
           (country === "All" || pair.left.country === country) &&
+          (statusFilter === "all" ||
+            (statusFilter === "unresolved"
+              ? resolutionStatus(byId.get(pair.id), mode) !== "resolved"
+              : resolutionStatus(byId.get(pair.id), mode) === statusFilter)) &&
           searchable.includes(normalizedQuery)
         );
       }),
-    [pairs, country, normalizedQuery],
+    [pairs, country, statusFilter, normalizedQuery, byId, mode],
   );
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount - 1);
@@ -99,10 +124,15 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
       totalFields: pairs.length * FIELDS.length * 2,
     };
   }, [pairs]);
+  const counts = useMemo(() => {
+    const next = { resolved: 0, review: 0, pending: 0, demo: 0 };
+    for (const pair of pairs) next[resolutionStatus(byId.get(pair.id), mode)] += 1;
+    return next;
+  }, [pairs, byId, mode]);
 
   useEffect(() => {
     setPage(0);
-  }, [query, country, dataset]);
+  }, [query, country, statusFilter, dataset]);
 
   useEffect(() => {
     if (selected && !visiblePairs.some((pair) => pair.id === selected))
@@ -195,6 +225,13 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
                 both records and all 8 fields.
               </p>
             </div>
+            <div className={styles.statPanel}>
+              <h3>Resolution status</h3>
+              <p className={styles.statusSummary}>Resolved by Jev: {counts.resolved}</p>
+              <p className={styles.statusSummary}>Needs review: {counts.review}</p>
+              <p className={styles.statusSummary}>Not run with Jev: {counts.pending}</p>
+              <p className={styles.statusSummary}>Demo only: {counts.demo}</p>
+            </div>
           </section>
 
           <section className={styles.browser} aria-label="Browse dataset pairs">
@@ -222,13 +259,23 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
                   <option>Germany</option>
                 </select>
               </label>
+              <label>
+                Resolution status
+                <select aria-label="Resolution status" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}>
+                  <option value="all">All pairs</option>
+                  <option value="resolved">Resolved by Jev</option>
+                  <option value="unresolved">Not resolved by Jev</option>
+                  <option value="review">Needs review</option>
+                  <option value="demo">Demo only</option>
+                </select>
+              </label>
               <p aria-live="polite">
                 {filtered.length} of {pairs.length} pairs
               </p>
             </div>
             {!filtered.length ? (
               <p className={styles.empty}>
-                No pairs match this search or country filter.
+                No pairs match this search, country or resolution status.
               </p>
             ) : (
               <>
@@ -237,6 +284,8 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
                     <PairCard
                       key={pair.id}
                       pair={pair}
+                      result={byId.get(pair.id)}
+                      mode={mode}
                       active={selectedPair?.id === pair.id}
                       onOpen={() => openPair(pair.id)}
                     />
@@ -269,7 +318,7 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
           </section>
 
           {selectedPair && (
-            <Comparison pair={selectedPair} comparisonRef={comparisonRef} />
+            <Comparison pair={selectedPair} result={byId.get(selectedPair.id)} mode={mode} comparisonRef={comparisonRef} />
           )}
         </div>
       )}
@@ -279,10 +328,14 @@ export default function DatasetExplorer({ dataset }: { dataset: Dataset }) {
 
 function PairCard({
   pair,
+  result,
+  mode,
   active,
   onOpen,
 }: {
   pair: Pair;
+  result?: Resolution;
+  mode: "demo" | "live";
   active: boolean;
   onOpen: () => void;
 }) {
@@ -293,6 +346,7 @@ function PairCard({
         <span className={`${styles.badge} ${styles[pair.expected]}`}>
           Expected {pair.expected}
         </span>
+        <StatusBadge status={resolutionStatus(result, mode)} result={result} />
       </div>
       <strong>
         {readable(pair.left.name)} <span aria-hidden="true">/</span>{" "}
@@ -317,9 +371,13 @@ function PairCard({
 
 function Comparison({
   pair,
+  result,
+  mode,
   comparisonRef,
 }: {
   pair: Pair;
+  result?: Resolution;
+  mode: "demo" | "live";
   comparisonRef: React.RefObject<HTMLElement | null>;
 }) {
   return (
@@ -339,6 +397,7 @@ function Comparison({
         <span className={`${styles.badge} ${styles[pair.expected]}`}>
           Expected {pair.expected}
         </span>
+        <StatusBadge status={resolutionStatus(result, mode)} result={result} />
       </div>
       <p className={styles.scenario}>{pair.scenario}</p>
       <div className={styles.records}>
