@@ -31,3 +31,6 @@ Endpoint to confirm from official OpenRouter SDK source before final integration
 
 ## Contract v1.1 — user steering
 Cover BOTH UK and Germany; default Mixed. ProjectField also includes country. Dataset adds country: 'UK' | 'Germany' | 'Mixed'. generateDataset(count, seed, country = 'Mixed'). UI country filter/generator selection. German descriptions and addresses include Straße/Str., umlauts, five-digit postcodes, Neubau/Sanierung, Bauabschnitt and different houses. Preserve country distinctions. All other contracts unchanged.
+
+## Deployment follow-up
+The user authorized production Vercel deployment and requested CLI verification. Target: `stephen-brownseys-projects/jev`, connected to `Brownsey/jev`. The user will supply the OpenRouter API key and configure a custom domain later. Configure the hosted app access token separately; verify a Ready deployment and a real hosted demo journey without requiring paid model inference.

@@ -105,11 +105,13 @@ npm run verify
 
 Verification includes TypeScript, unit/route tests, a production build, and browser journeys through the real local backend. External provider tests use controlled responses; passing these does not prove paid live inference. A live smoke run requires a funded OpenRouter key.
 
-## Hosting later on Vercel
+## Vercel hosting
 
-The app uses standard Next.js routes and needs no database. Import this repository into Vercel when ready, set `OPENROUTER_API_KEY`, and set a strong `JEV_ACCESS_TOKEN`. Enter the latter in the app to authorize live calls. Hosted live requests fail closed without the access token configured, preventing a public owner-funded API proxy. Demo mode remains available. This is a personal lab, not a multi-user service with accounts or quotas.
+The app uses standard Next.js routes and needs no database. The `jev` project in Stephen Brownsey's projects is connected to `Brownsey/jev`, using Next.js and Node.js 22. Pushes to the production branch deploy through the GitHub integration.
 
-No deployment is performed as part of local setup.
+`JEV_ACCESS_TOKEN` is configured as a secret in Production and Preview. Its local copy is in the ignored `.env.vercel-access.local` file. Paste that value into the hosted app's **Access token** field; it stays in browser memory. Never commit the file or share the token publicly.
+
+Add `OPENROUTER_API_KEY` to the desired environment in [Vercel project settings](https://vercel.com/stephen-brownseys-projects/jev/settings/environment-variables), then redeploy for the new value to take effect. Select **Live** in the app to use Jev. Demo mode needs no provider key. Hosted live requests fail closed without the app access token, preventing a public owner-funded API proxy. This is a personal lab, not a multi-user service with accounts or quotas.
 
 ## Primary references
 
