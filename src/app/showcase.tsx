@@ -572,9 +572,9 @@ export default function Showcase() {
         </label>
         {mode === "live" && config?.accessRequired ? (
           <label>
-            Access token
+            App password
             <input
-              aria-label="Access token"
+              aria-label="App password"
               type="password"
               value={token}
               onChange={(event) => setToken(event.target.value)}
@@ -608,7 +608,7 @@ export default function Showcase() {
           <p className={styles.context}>
             {!config?.configured
               ? "Live provider is not configured."
-              : "Enter the access token to run live."}
+              : "Enter the app password to run live."}
           </p>
         ) : (
           <p className={styles.context}>

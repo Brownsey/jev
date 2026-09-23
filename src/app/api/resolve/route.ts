@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   }
   const parsed = validateResolveRequest(input);
   if (!parsed) return error("Invalid request.", 400);
-  const accessToken = process.env.JEV_ACCESS_TOKEN;
+  const accessToken = process.env.JEV_APP_PASSWORD;
   const started = Date.now();
   if (parsed.mode === "demo")
     return NextResponse.json({
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
     return error("Authorization required.", 401);
   if (hosted() && !accessToken)
     return error("Live access is not configured.", 503);
-  const apiKey = process.env.OPENROUTER_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY || process.env.JEV_ACCESS_TOKEN;
   if (!apiKey) return error("Live provider is not configured.", 503);
   try {
     const result = await liveResolve(parsed, apiKey);

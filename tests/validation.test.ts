@@ -68,11 +68,11 @@ test("validation: cross-site browser requests rejected, alternate same host acce
 });
 
 test("validation: hosted live requires owner token; demo needs no token", async (t) => {
-  const before = { VERCEL: process.env.VERCEL, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY, JEV_ACCESS_TOKEN: process.env.JEV_ACCESS_TOKEN };
+  const before = { VERCEL: process.env.VERCEL, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY, JEV_APP_PASSWORD: process.env.JEV_APP_PASSWORD };
   t.after(() => { for (const [key, value] of Object.entries(before)) if (value === undefined) delete process.env[key]; else process.env[key] = value; });
-  process.env.VERCEL = "1"; process.env.OPENROUTER_API_KEY = "validation-provider-secret"; delete process.env.JEV_ACCESS_TOKEN;
+  process.env.VERCEL = "1"; process.env.OPENROUTER_API_KEY = "validation-provider-secret"; delete process.env.JEV_APP_PASSWORD;
   assert.equal((await POST(request(input({ mode: "live" })))).status, 503);
-  process.env.JEV_ACCESS_TOKEN = "validation-owner-secret";
+  process.env.JEV_APP_PASSWORD = "validation-owner-secret";
   assert.equal((await POST(request(input()))).status, 200);
   assert.equal((await POST(request(input({ mode: "live" })))).status, 401);
   assert.equal((await POST(request(input({ mode: "live" }), { authorization: "Bearer incorrect" }))).status, 401);
@@ -84,9 +84,9 @@ test("validation: hosted live requires owner token; demo needs no token", async 
 });
 
 test("validation: live error mapping stays safe for auth, credit, rate, network and timeout", async (t) => {
-  const before = { OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY, JEV_ACCESS_TOKEN: process.env.JEV_ACCESS_TOKEN };
+  const before = { OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY, JEV_APP_PASSWORD: process.env.JEV_APP_PASSWORD };
   t.after(() => { for (const [key, value] of Object.entries(before)) if (value === undefined) delete process.env[key]; else process.env[key] = value; });
-  process.env.OPENROUTER_API_KEY = "validation-secret"; process.env.JEV_ACCESS_TOKEN = "validation-owner";
+  process.env.OPENROUTER_API_KEY = "validation-secret"; process.env.JEV_APP_PASSWORD = "validation-owner";
   for (const status of [401, 402, 403, 429, 500]) {
     const mocked = t.mock.method(globalThis, "fetch", async () => new Response("raw validation-secret", { status }));
     const response = await POST(request(input({ mode: "live" }), { authorization: "Bearer validation-owner" }));

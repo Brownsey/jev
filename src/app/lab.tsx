@@ -564,9 +564,9 @@ export default function Page() {
           </label>
           {config?.accessRequired && (
             <label>
-              Access token
+              App password
               <input
-                aria-label="Access token"
+                aria-label="App password"
                 type="password"
                 value={token}
                 onChange={(event) => setToken(event.target.value)}

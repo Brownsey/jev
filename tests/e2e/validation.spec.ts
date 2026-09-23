@@ -86,12 +86,12 @@ test("validation: cancel retains completed real backend batch and stops more bat
 test("validation: token stays in memory and storage failures stay visible", async ({ page }) => {
   await page.route("**/api/config", route => route.fulfill({ json: { configured: false, accessRequired: true, model: "typesafe/jev-1.13" } }));
   await page.goto("/lab");
-  await page.getByLabel("Access token").fill("isolated-validation-access-secret");
+  await page.getByLabel("App password").fill("isolated-validation-access-secret");
   await page.getByLabel("Pair count").fill("20");
   await page.getByRole("button", { name: "Generate pairs", exact: true }).click();
   expect(await page.evaluate(() => JSON.stringify(localStorage))).not.toContain("isolated-validation-access-secret");
   await page.reload();
-  await expect(page.getByLabel("Access token")).toHaveValue("");
+  await expect(page.getByLabel("App password")).toHaveValue("");
   await page.evaluate(() => { Storage.prototype.setItem = () => { throw new DOMException("Quota", "QuotaExceededError"); }; });
   await page.getByLabel("Review threshold").fill("0.89");
   await expect(page.getByText(/Workspace could not be saved/)).toBeVisible();

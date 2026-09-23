@@ -129,11 +129,11 @@ Verification includes TypeScript, unit/route tests, a production build, and brow
 
 The app uses standard Next.js routes and needs no database. The `jev` project in Stephen Brownsey's projects is connected to `Brownsey/jev`, using Next.js and Node.js 22. Pushes to the production branch deploy through the GitHub integration.
 
-`JEV_ACCESS_TOKEN` is configured as a secret in Production and Preview. Its local copy is in the ignored `.env.vercel-access.local` file. Paste that value into the hosted app's **Access token** field; it stays in browser memory. Never commit the file or share the token publicly.
+The existing deployment stores its OpenRouter provider key in the sensitive `JEV_ACCESS_TOKEN` variable. The server accepts this alias; `OPENROUTER_API_KEY` takes precedence if both are configured. Neither value belongs in the browser.
 
-Add `OPENROUTER_API_KEY` to the desired environment in [Vercel project settings](https://vercel.com/stephen-brownseys-projects/jev/settings/environment-variables), then redeploy for the new value to take effect. Select **Live** in the app to use Jev. Demo mode needs no provider key. Hosted live requests fail closed without the app access token, preventing a public owner-funded API proxy. This is a personal lab, not a multi-user service with accounts or quotas.
+Set a separate `JEV_APP_PASSWORD` in the desired environment in [Vercel project settings](https://vercel.com/stephen-brownseys-projects/jev/settings/environment-variables), then redeploy for changes to take effect. Select **Live** and enter it in **App password**. The password stays in browser memory and is excluded from saved workspaces and exports. Hosted live requests fail closed without a configured password. The demonstration remains publicly viewable; this is a personal lab, not a multi-user service with accounts or quotas.
 
-These are separate credentials: `OPENROUTER_API_KEY` is the provider key, while `JEV_ACCESS_TOKEN` is an app password you choose. Do not use the provider key as the app password or enter it into the browser.
+Do not use the provider key as the app password. `JEV_ACCESS_TOKEN` is retained solely as the provider alias because Vercel sensitive secrets cannot be read back or renamed.
 
 ## Primary references
 

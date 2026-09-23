@@ -96,7 +96,7 @@ test("resumes only unfinished live comparisons and keeps the token out of storag
   });
   await page.reload();
   await page.getByLabel("Mode", { exact: true }).selectOption("live");
-  await page.getByLabel("Access token").fill("session-secret");
+  await page.getByLabel("App password").fill("session-secret");
   await page.getByRole("button", { name: "Run live" }).click();
   await expect(page.getByText(/Completed \d+\/\d+ comparisons/)).toBeVisible();
   const afterFirstRun = requests;
