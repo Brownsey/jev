@@ -10,6 +10,8 @@ Local candidate selection uses project fields, never the separate evaluation lab
 
 Confident match links produce proposed groups. Contradictory or review links remain flagged. A record with no match found is not a verified singleton: candidate selection and the cap can omit matches. Reveal ground truth to inspect candidate recall and pairwise group precision/recall over the full labelled collection, including missed candidates. Simulation uses the existing heuristic and is never evidence of Jev's accuracy.
 
+Simulation uses deterministic matching rules over the selected fields: similar project names at the same address and compatible references support matches; different houses or phases prevent merging nearby projects. Missing evidence remains reviewable. Its illustrative scores are not calibrated probabilities, and prompt instructions affect live Jev only. The default collection includes duplicate pairs, triples and single projects. When simulation rules change, obsolete simulated results are cleared with a rerun notice; data, settings and live results are retained.
+
 The showcase saves a compact versioned browser workspace separately from the legacy pair lab. It regenerates deterministic records from saved parameters and retains completed results. Export an experiment for its records, settings, candidates, predictions, groups and evaluation. Credentials are never persisted or exported.
 
 ## What this demonstrates

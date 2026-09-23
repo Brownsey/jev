@@ -6,6 +6,7 @@ import { ResolutionBadge } from "./resolution-badge";
 import { JEV_MODELS, isJevModel } from "../lib/models";
 import {
   DEFAULT_MODEL,
+  SIMULATION_VERSION,
   FIELDS,
   PROMPTS,
   buildJevRequest,
@@ -22,6 +23,7 @@ import type {
 
 type Saved = {
   version: 1;
+  simulationVersion?: number;
   dataset: Dataset;
   prompt: string;
   fields: ProjectField[];
@@ -188,6 +190,13 @@ export default function Page() {
         localStorage.getItem(STORE) ?? "null",
       ) as Saved | null;
       if (validSaved(saved)) {
+        if (saved.mode === "demo" && saved.simulationVersion !== SIMULATION_VERSION && saved.results.length) {
+          saved.results = [];
+          saved.resolvedModels = [];
+          saved.elapsed = null;
+          saved.usage = null;
+          setNotice("Simulation updated. Run again for refreshed matches.");
+        }
         setDataset(saved.dataset);
         setCountry(saved.dataset.country);
         setSeed(saved.dataset.seed);
@@ -228,6 +237,7 @@ export default function Page() {
         STORE,
         JSON.stringify({
           version: 1,
+          simulationVersion: SIMULATION_VERSION,
           dataset,
           prompt,
           fields,
@@ -481,6 +491,7 @@ export default function Page() {
           <button
             onClick={() =>
               download("jev-evaluation.json", {
+                simulationVersion: mode === "demo" ? SIMULATION_VERSION : undefined,
                 dataset,
                 prompt,
                 fields,
@@ -519,7 +530,7 @@ export default function Page() {
             </label>
             {mode === "demo" && (
               <p className="hint">
-                Simulated heuristic: not Jev, not benchmark evidence.
+                Simulated matching rules: not Jev, not benchmark evidence. Scores are illustrative.
               </p>
             )}
             {mode === "live" && !config?.configured && (

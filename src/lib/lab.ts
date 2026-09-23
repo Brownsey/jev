@@ -1,6 +1,7 @@
 import type { Dataset, Decision, Pair, Project, ProjectField, Resolution, ResolveRequest } from "./types";
 
 export const DEFAULT_MODEL = "typesafe/jev-1.13";
+export const SIMULATION_VERSION = 1;
 export const FIELDS: { key: ProjectField; label: string }[] = [
   ["name", "Name"], ["description", "Description"], ["address", "Address"], ["postcode", "Postcode"], ["city", "City"], ["country", "Country"], ["developer", "Developer"], ["reference", "Reference"],
 ].map(([key, label]) => ({ key: key as ProjectField, label }));

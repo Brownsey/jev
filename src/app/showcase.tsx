@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
-import { FIELDS, PROMPTS, DEFAULT_MODEL } from "../lib/lab";
+import { FIELDS, PROMPTS, DEFAULT_MODEL, SIMULATION_VERSION } from "../lib/lab";
 import { JEV_MODELS, isJevModel } from "../lib/models";
 import {
   candidatePairs,
@@ -27,6 +27,7 @@ type RunState =
 type Usage = { inputTokens: number | null; cost: number | null };
 type Saved = {
   version: 1;
+  simulationVersion?: number;
   generator: {
     count: number;
     seed: number;
@@ -220,6 +221,13 @@ export default function Showcase() {
       const raw = localStorage.getItem(STORE);
       const saved = raw ? restore(JSON.parse(raw)) : null;
       if (saved) {
+        if (saved.settings.mode === "demo" && saved.simulationVersion !== SIMULATION_VERSION && saved.results.length) {
+          saved.results = [];
+          saved.actualModels = [];
+          saved.elapsedMs = null;
+          saved.usage = null;
+          setNotice("Simulation updated. Run again for refreshed matches.");
+        }
         setCount(saved.generator.count);
         setSeed(saved.generator.seed);
         setCountry(saved.generator.country);
@@ -259,6 +267,7 @@ export default function Showcase() {
         STORE,
         JSON.stringify({
           version: 1,
+          simulationVersion: SIMULATION_VERSION,
           generator: { count, seed, country, cap },
           settings: { mode, model, threshold, prompt, fields },
           results,
@@ -601,8 +610,9 @@ export default function Showcase() {
         </div>
         {mode === "demo" ? (
           <p className={styles.context}>
-            Local simulated decisions. They demonstrate the workflow and are not
-            Jev performance evidence.
+            Local matching rules handle spelling, addresses and phases. Scores
+            are illustrative, not Jev probabilities. Instructions affect live
+            Jev only.
           </p>
         ) : liveBlocked ? (
           <p className={styles.context}>
@@ -870,6 +880,7 @@ export default function Showcase() {
             className={styles.export}
             onClick={() =>
               download({
+                simulationVersion: mode === "demo" ? SIMULATION_VERSION : undefined,
                 version: 1,
                 settings: {
                   count,

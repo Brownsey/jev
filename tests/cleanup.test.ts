@@ -33,8 +33,14 @@ test("comparison fields must be unique and thresholds finite", () => {
 
 test("streamed UTF-8 preserves German fields across byte boundaries", async () => {
   const input = fixture();
-  input.fields = ["name"];
-  input.pairs[0].left.name = input.pairs[0].right.name = "Grünauer Straße";
+  input.fields = ["reference"];
+  // The first multibyte character is in the left reference. A broken streaming
+  // decoder corrupts it while the right reference stays intact, preventing a match.
+  input.pairs[0].left = {
+    name: "Project", description: "", address: "1 Road", postcode: "10115",
+    city: "Berlin", country: "Germany", developer: "Build", reference: "GRÜN-123",
+  };
+  input.pairs[0].right = { ...input.pairs[0].left };
   const bytes = new TextEncoder().encode(JSON.stringify(input));
   const split = bytes.findIndex((byte) => byte >= 128) + 1;
   const response = await POST(
@@ -49,7 +55,7 @@ test("streamed UTF-8 preserves German fields across byte boundaries", async () =
     ),
   );
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).results[0].probabilities.match, 1);
+  assert.equal((await response.json()).results[0].decision, "match");
 });
 
 test("unreadable request streams return a controlled client error", async () => {

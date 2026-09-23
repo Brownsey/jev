@@ -19,25 +19,144 @@ const clamp = (value: unknown) =>
   value <= 1
     ? value
     : null;
+
+const folded = (value: string) =>
+  value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/ß/g, "ss")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+const phaseKey = (value: string) =>
+  folded(value).replace(
+    /\b(?:phase|ph|bauabschnitt|bauabschn|ba)\s*(\d+)\b/g,
+    "phase $1",
+  );
+const addressKey = (value: string) =>
+  folded(value)
+    .replace(/(?:strasse|str)\b/g, " street")
+    .replace(/\b(?:st|street)\b/g, "street")
+    .replace(/\s+/g, " ")
+    .trim();
+const countryKey = (value: string) => {
+  const key = folded(value).replace(/\s/g, "");
+  if (["uk", "gb", "greatbritain", "unitedkingdom"].includes(key)) return "uk";
+  if (["de", "deutschland", "germany"].includes(key)) return "de";
+  return key;
+};
+const cityKey = (value: string) =>
+  folded(
+    value
+      .toLowerCase()
+      .replace(/ä/g, "ae")
+      .replace(/ö/g, "oe")
+      .replace(/ü/g, "ue"),
+  );
+const fieldKey = (field: ResolveRequest["fields"][number], value: string) => {
+  if (field === "address") return addressKey(value);
+  if (field === "name" || field === "description") return phaseKey(value);
+  if (field === "country") return countryKey(value);
+  if (field === "city") return cityKey(value);
+  if (field === "postcode") return folded(value).replace(/\s/g, "");
+  return folded(value);
+};
+const phases = (values: string[]) => new Set(
+  values.flatMap((value) => [...phaseKey(value).matchAll(/\bphase (\d+)\b/g)].map(match => match[1])),
+);
+const house = (value: string) => addressKey(value).match(/\b\d+[a-z]?\b/)?.[0];
+const withinTwoEdits = (left: string, right: string) => {
+  if (Math.abs(left.length - right.length) > 2) return false;
+  let previous = new Map<number, number>(
+    Array.from({ length: Math.min(2, right.length) + 1 }, (_, index) => [index, index]),
+  );
+  for (let row = 1; row <= left.length; row++) {
+    const current = new Map<number, number>();
+    for (let column = Math.max(0, row - 2); column <= Math.min(right.length, row + 2); column++)
+      current.set(column, Math.min(
+        (current.get(column - 1) ?? Infinity) + 1,
+        (previous.get(column) ?? Infinity) + 1,
+        (previous.get(column - 1) ?? Infinity) +
+          (left[row - 1] === right[column - 1] ? 0 : 1),
+      ));
+    previous = current;
+  }
+  return (previous.get(right.length) ?? Infinity) <= 2;
+};
+
+const simulatedChoice = (
+  pair: Pair,
+  fields: ResolveRequest["fields"],
+): Decision => {
+  const selected = new Set(fields);
+  const key = (side: "left" | "right", field: ResolveRequest["fields"][number]) =>
+    fieldKey(field, pair[side][field]);
+  const both = (field: ResolveRequest["fields"][number]) => {
+    const left = key("left", field);
+    const right = key("right", field);
+    return left && right ? [left, right] : null;
+  };
+  const conflicts = (field: ResolveRequest["fields"][number]) => {
+    const values = selected.has(field) ? both(field) : null;
+    return !!values && values[0] !== values[1];
+  };
+
+  if (conflicts("reference") || conflicts("country")) return "different";
+  const addresses = selected.has("address") ? both("address") : null;
+  if (addresses) {
+    const leftHouse = house(addresses[0]);
+    const rightHouse = house(addresses[1]);
+    if (leftHouse && rightHouse && leftHouse !== rightHouse) return "different";
+  }
+  const phaseFields = fields.filter(
+    (field) => field === "name" || field === "description",
+  );
+  const leftPhases = phases(phaseFields.map((field) => pair.left[field]));
+  const rightPhases = phases(phaseFields.map((field) => pair.right[field]));
+  if (leftPhases.size > 1 || rightPhases.size > 1) return "review";
+  if (leftPhases.size && rightPhases.size && [...leftPhases][0] !== [...rightPhases][0]) return "different";
+  if (
+    (addresses && addresses[0] !== addresses[1]) ||
+    conflicts("postcode") ||
+    conflicts("city")
+  )
+    return "review";
+
+  const reference = selected.has("reference") ? both("reference") : null;
+  if (reference && reference[0] === reference[1]) return "match";
+  const names = selected.has("name") ? both("name") : null;
+  const sameAddress = !!addresses && addresses[0] === addresses[1];
+  const similarName =
+    !!names &&
+    (names[0] === names[1] ||
+      (sameAddress &&
+        Math.max(names[0].length, names[1].length) >= 6 &&
+        withinTwoEdits(names[0], names[1])));
+  if (similarName && sameAddress) return "match";
+  const postcodes = selected.has("postcode") ? both("postcode") : null;
+  if (similarName && postcodes && postcodes[0] === postcodes[1]) return "match";
+  return "review";
+};
+
 export const demoResolve = (
   pairs: Pair[],
   fields: ResolveRequest["fields"],
   threshold: number,
 ): Resolution[] =>
   pairs.map((pair) => {
-    const equal = fields.filter(
-      (field) =>
-        pair.left[field].trim().toLowerCase() ===
-        pair.right[field].trim().toLowerCase(),
-    ).length;
-    const score = fields.length ? equal / fields.length : 0;
-    const probabilities = { match: score, different: 1 - score, review: 0 };
-    const choice: Decision = score > 0.5 ? "match" : "different";
+    const choice = simulatedChoice(pair, fields);
+    const probabilities =
+      choice === "match"
+        ? { match: 0.9, different: 0.04, review: 0.06 }
+        : choice === "different"
+          ? { match: 0.04, different: 0.9, review: 0.06 }
+          : { match: 0.15, different: 0.2, review: 0.65 };
     const confidence = probabilities[choice];
     return {
       id: pair.id,
       choice,
-      decision: confidence >= threshold ? choice : "review",
+      decision:
+        choice === "review" || confidence < threshold ? "review" : choice,
       confidence,
       probabilities,
     };
