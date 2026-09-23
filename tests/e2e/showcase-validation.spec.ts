@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("validation: real demo reloads completed results and export includes truth", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/experiment");
   await expect(page.getByRole("button", { name: "Run simulation" })).toBeEnabled();
   await page.getByRole("button", { name: "Run simulation" }).click();
   await expect(page.getByText(/Completed \d+\/\d+ comparisons/)).toBeVisible();
@@ -22,7 +22,7 @@ test("validation: real demo reloads completed results and export includes truth"
 });
 
 test("validation: corrupt probability sum in an otherwise valid workspace is rejected", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/experiment");
   await page.getByRole("button", { name: "Run simulation" }).click();
   await expect(page.getByText(/Completed \d+\/\d+ comparisons/)).toBeVisible();
   await page.evaluate(() => { const raw = JSON.parse(localStorage.getItem("jev-collection-showcase:v1")!); raw.results[0].probabilities = { match: .8, different: .8, review: .1 }; localStorage.setItem("jev-collection-showcase:v1", JSON.stringify(raw)); });
@@ -33,7 +33,7 @@ test("validation: corrupt probability sum in an otherwise valid workspace is rej
 
 test("validation: keyboard inspection works on mobile without horizontal overflow", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/experiment");
   await page.getByRole("button", { name: "Run simulation" }).click();
   const group = page.getByRole("button", { name: /Inspect entity/ }).first();
   await group.focus();
@@ -43,7 +43,7 @@ test("validation: keyboard inspection works on mobile without horizontal overflo
 });
 
 test("validation: cancellation retains a batch and resume sends only unfinished work", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/experiment");
   await page.getByLabel("Record count").selectOption("60");
   await page.getByLabel("Comparison cap").selectOption("50");
   let calls = 0; let firstIds: string[] = []; let release!: () => void;

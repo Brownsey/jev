@@ -1,1 +1,1 @@
-export { default } from "./showcase";
+export { default } from "./recorded-demo";

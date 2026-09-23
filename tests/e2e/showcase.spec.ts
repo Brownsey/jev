@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/experiment");
 });
 
 test("runs the ready collection demo and shows honest group evidence", async ({

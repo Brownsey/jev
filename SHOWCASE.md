@@ -1,5 +1,17 @@
 # Entity discovery showcase — iteration 1
 
+## Recorded demo — contract v1
+
+Base `34a1ee3`. Light delivery with fullstack-efficient routing. The user requested one real Jev run for the demo. One paid request through the existing hosted adapter used five source records and all ten pair comparisons; preserve its complete normalized response in `src/data/jev-recording.json`. No additional paid inference for implementation or tests.
+
+- R1 `/` presents a recorded Jev result, explicitly showing model, recording time, actual cost, input tokens and server elapsed time. Viewing, inspecting and refreshing never call inference or require a password. The committed recording contains no credentials.
+- R2 Display the five synthetic records with inspectable fields, all ten comparisons with original choices, final decisions, confidence and probabilities, and proposed groups derived only from match links. Preserve the one low-probability cross-country match routed to review at the 0.72 selected-option probability threshold. Both incident groups remain flagged; no claim of perfect model accuracy or verified entities. Explain shared references, simple negatives and the small non-benchmark sample.
+- R3 Show the exact prompt/fields used. Preserve the editable collection workspace and simulation/live behavior at `/experiment`, including existing browser storage; preserve `/lab`. Provide navigation between recording and experiments. No authentication, provider adapter, dataset generator or persistence changes.
+- R4 Preserve the established typography/palette, use responsive grouped cards and native expandable record details, visible focus and keyboard access. Browser tests prove complete outcomes/no inference/reload/navigation; inspect desktop and mobile screenshots. Existing suites remain intact except route updates.
+- R5 Typecheck, unit/API, production build and all browser checks must pass, with independent validation and distinct final review (high risk: recorded external integration plus routing changes). Commit/push and verify exact-commit Vercel Ready/build logs plus hosted recorded-demo journey.
+
+Ownership: Terra owns only recorded-demo component/styles. Lead owns fixture, routing, documentation, test route updates, regression, server/build/git/deploy. Validator may add isolated tests; final reviewer is read-only. Recording is build-time data, not a new cache/service.
+
 Base: `04181ab`. Previous goal turn made progress: reviewed cleanup, committed, and verified production Ready plus 19 hosted browser cases. This iteration closes the missing collection-to-entities journey. Light delivery profile with fullstack-efficient routing. Existing pair lab remains available at `/lab`; `/` becomes the showcase. No new dependencies, shared database or paid model calls without the existing maximum-five-input-row authorization.
 
 ## Acceptance criteria

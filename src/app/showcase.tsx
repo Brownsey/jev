@@ -446,6 +446,7 @@ export default function Showcase() {
           <span className={mode === "demo" ? styles.simulation : styles.live}>
             {mode === "demo" ? "Simulation" : "Live Jev"}
           </span>
+          <a href="/">View recorded Jev demo →</a>
           <a href="/lab">Open advanced pair lab →</a>
         </div>
       </header>

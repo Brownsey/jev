@@ -1,0 +1,269 @@
+{
+  "version": 1,
+  "recordedAt": "2026-09-23T10:22:04.144Z",
+  "settings": {
+    "model": "typesafe/jev-1.13",
+    "prompt": "Compare selected project records as an entity-resolution task. Match paraphrased descriptions and common UK/German address abbreviations when the development, site and phase align. Different houses, Neubau versus Sanierung scope, Bauabschnitt/phase or references are different. Use review when evidence is incomplete.",
+    "fields": [
+      "name",
+      "description",
+      "address",
+      "postcode",
+      "city",
+      "country",
+      "developer",
+      "reference"
+    ],
+    "threshold": 0.72
+  },
+  "collection": {
+    "version": 1,
+    "seed": 20260922,
+    "country": "Mixed",
+    "records": [
+      {
+        "id": "r-1mttyaf",
+        "project": {
+          "name": "Canal Works Ph. 1",
+          "description": "Residential scheme and public realm, phase 1.",
+          "address": "14 King St",
+          "postcode": "LS1 4DY",
+          "city": "Leeds",
+          "country": "UK",
+          "developer": "Northgate Developments",
+          "reference": "UK-LS1 4DY-1-1"
+        }
+      },
+      {
+        "id": "r-1ndt5od",
+        "project": {
+          "name": "Lindenhof Bauabschnitt 1",
+          "description": "Neubau von Wohnungen, Bauabschnitt 1.",
+          "address": "Invalidenstraße 42",
+          "postcode": "10115",
+          "city": "Berlin",
+          "country": "Germany",
+          "developer": "Bauwerk Mitte GmbH",
+          "reference": "DE-10115-1-1"
+        }
+      },
+      {
+        "id": "r-1lfvxtk",
+        "project": {
+          "name": "Lindenhof BA 1",
+          "description": "Neubauprojekt von Wohnungen, Bauabschnitt 1.",
+          "address": "Invalidenstr. 42",
+          "postcode": "10115",
+          "city": "Berlin",
+          "country": "Germany",
+          "developer": "Bauwerk Mitte GmbH",
+          "reference": "DE-10115-1-1"
+        }
+      },
+      {
+        "id": "r-1mjuclg",
+        "project": {
+          "name": "Canal Works Phase 1",
+          "description": "New homes and public realm, phase 1.",
+          "address": "14 King Street",
+          "postcode": "LS1 4DY",
+          "city": "Leeds",
+          "country": "UK",
+          "developer": "Northgate Developments",
+          "reference": "UK-LS1 4DY-1-1"
+        }
+      },
+      {
+        "id": "r-1n3tjze",
+        "project": {
+          "name": "Canal Works PHASE 1",
+          "description": "",
+          "address": "14 King Street",
+          "postcode": "LS1 4DY",
+          "city": "Leeds",
+          "country": "UK",
+          "developer": "Northgate Developments",
+          "reference": "UK-LS1 4DY-1-1"
+        }
+      }
+    ],
+    "truth": {
+      "r-1mjuclg": "g-0cjhndj",
+      "r-1mttyaf": "g-0cjhndj",
+      "r-1n3tjze": "g-0cjhndj",
+      "r-1ndt5od": "g-0c9i1ok",
+      "r-1lfvxtk": "g-0c9i1ok"
+    }
+  },
+  "candidates": [
+    {
+      "id": "c-r-1mttyaf-r-1ndt5od",
+      "leftId": "r-1mttyaf",
+      "rightId": "r-1ndt5od"
+    },
+    {
+      "id": "c-r-1lfvxtk-r-1mttyaf",
+      "leftId": "r-1lfvxtk",
+      "rightId": "r-1mttyaf"
+    },
+    {
+      "id": "c-r-1mjuclg-r-1mttyaf",
+      "leftId": "r-1mjuclg",
+      "rightId": "r-1mttyaf"
+    },
+    {
+      "id": "c-r-1mttyaf-r-1n3tjze",
+      "leftId": "r-1mttyaf",
+      "rightId": "r-1n3tjze"
+    },
+    {
+      "id": "c-r-1lfvxtk-r-1ndt5od",
+      "leftId": "r-1lfvxtk",
+      "rightId": "r-1ndt5od"
+    },
+    {
+      "id": "c-r-1mjuclg-r-1ndt5od",
+      "leftId": "r-1mjuclg",
+      "rightId": "r-1ndt5od"
+    },
+    {
+      "id": "c-r-1n3tjze-r-1ndt5od",
+      "leftId": "r-1n3tjze",
+      "rightId": "r-1ndt5od"
+    },
+    {
+      "id": "c-r-1lfvxtk-r-1mjuclg",
+      "leftId": "r-1lfvxtk",
+      "rightId": "r-1mjuclg"
+    },
+    {
+      "id": "c-r-1lfvxtk-r-1n3tjze",
+      "leftId": "r-1lfvxtk",
+      "rightId": "r-1n3tjze"
+    },
+    {
+      "id": "c-r-1mjuclg-r-1n3tjze",
+      "leftId": "r-1mjuclg",
+      "rightId": "r-1n3tjze"
+    }
+  ],
+  "response": {
+    "results": [
+      {
+        "id": "c-r-1mttyaf-r-1ndt5od",
+        "choice": "different",
+        "decision": "different",
+        "confidence": 0.91,
+        "probabilities": {
+          "match": 0.05,
+          "different": 0.95,
+          "review": 0
+        }
+      },
+      {
+        "id": "c-r-1lfvxtk-r-1mttyaf",
+        "choice": "match",
+        "decision": "review",
+        "confidence": 0.49,
+        "probabilities": {
+          "match": 0.66,
+          "different": 0.33,
+          "review": 0.01
+        }
+      },
+      {
+        "id": "c-r-1mjuclg-r-1mttyaf",
+        "choice": "match",
+        "decision": "match",
+        "confidence": 0.99,
+        "probabilities": {
+          "match": 1,
+          "different": 0,
+          "review": 0
+        }
+      },
+      {
+        "id": "c-r-1mttyaf-r-1n3tjze",
+        "choice": "match",
+        "decision": "match",
+        "confidence": 0.96,
+        "probabilities": {
+          "match": 0.98,
+          "different": 0,
+          "review": 0.02
+        }
+      },
+      {
+        "id": "c-r-1lfvxtk-r-1ndt5od",
+        "choice": "match",
+        "decision": "match",
+        "confidence": 0.99,
+        "probabilities": {
+          "match": 0.99,
+          "different": 0.01,
+          "review": 0
+        }
+      },
+      {
+        "id": "c-r-1mjuclg-r-1ndt5od",
+        "choice": "different",
+        "decision": "different",
+        "confidence": 0.98,
+        "probabilities": {
+          "match": 0.01,
+          "different": 0.98,
+          "review": 0.01
+        }
+      },
+      {
+        "id": "c-r-1n3tjze-r-1ndt5od",
+        "choice": "different",
+        "decision": "different",
+        "confidence": 0.85,
+        "probabilities": {
+          "match": 0.07,
+          "different": 0.91,
+          "review": 0.02
+        }
+      },
+      {
+        "id": "c-r-1lfvxtk-r-1mjuclg",
+        "choice": "different",
+        "decision": "different",
+        "confidence": 0.94,
+        "probabilities": {
+          "match": 0.03,
+          "different": 0.96,
+          "review": 0.01
+        }
+      },
+      {
+        "id": "c-r-1lfvxtk-r-1n3tjze",
+        "choice": "different",
+        "decision": "different",
+        "confidence": 0.95,
+        "probabilities": {
+          "match": 0.03,
+          "different": 0.96,
+          "review": 0.01
+        }
+      },
+      {
+        "id": "c-r-1mjuclg-r-1n3tjze",
+        "choice": "match",
+        "decision": "match",
+        "confidence": 0.99,
+        "probabilities": {
+          "match": 0.99,
+          "different": 0,
+          "review": 0.01
+        }
+      }
+    ],
+    "inputTokens": 4204,
+    "cost": 0.000176568,
+    "model": "typesafe/jev-1.13-20260917",
+    "mode": "live",
+    "elapsedMs": 328
+  }
+}

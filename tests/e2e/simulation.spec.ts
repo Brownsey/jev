@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("default simulation visibly resolves pairs and triples without merging single projects", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/experiment");
   await page.getByRole("button", { name: "Run simulation", exact: true }).click();
   await expect(page.getByRole("status")).toContainText(/Completed \d+\/\d+ comparisons/);
   await page.getByLabel("Group status", { exact: true }).selectOption("linked");
@@ -22,7 +22,7 @@ test("default simulation visibly resolves pairs and triples without merging sing
 });
 
 for (const view of [
-  { path: "/", store: "jev-collection-showcase:v1", run: "Run simulation" },
+  { path: "/experiment", store: "jev-collection-showcase:v1", run: "Run simulation" },
   { path: "/lab", store: "jev-resolution-lab:v1", run: "Run demo" },
 ]) {
   test(`old simulation results reset without losing settings in ${view.path}`, async ({ page }) => {
@@ -32,7 +32,7 @@ for (const view of [
       await page.getByRole("button", { name: "Generate pairs" }).click();
     }
     await page.getByRole("button", { name: view.run, exact: true }).click();
-    if (view.path === "/") await expect(page.getByRole("status")).toContainText(/Completed \d+\/\d+ comparisons/);
+    if (view.path === "/experiment") await expect(page.getByRole("status")).toContainText(/Completed \d+\/\d+ comparisons/);
     else await expect(page.getByText("20/20", { exact: true })).toBeVisible();
     const before = await page.evaluate(key => {
       const saved = JSON.parse(localStorage.getItem(key)!);

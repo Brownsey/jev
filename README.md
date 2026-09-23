@@ -1,10 +1,16 @@
 # Jev entity-resolution showcase
 
-A demonstration of turning messy UK and German construction/planning records into proposed entity groups. The home page shows collection-level discovery; the advanced pair lab at `/lab` retains prompt and field experiments. Both use the same bounded Jev integration through OpenRouter.
+A demonstration of turning messy UK and German construction/planning records into proposed entity groups. The home page shows a recorded, paid Jev run. Collection experiments live at `/experiment`; the advanced pair lab at `/lab` retains prompt and field experiments.
+
+## Recorded Jev demo
+
+The immutable fixture in `src/data/jev-recording.json` was captured through the hosted live adapter on 23 September 2026 using five fictional records from `generateCollection(5, 20260922, "Mixed")`. All ten possible pairs were submitted in one request, including cross-country negatives. The response identifies `typesafe/jev-1.13-20260917`, 4,204 input tokens, 328 ms server-reported elapsed time and $0.000176568 cost.
+
+After the app's 0.72 selected-option probability threshold, four comparisons match, five differ and one requires review. The uncertain comparison originally selected match at 0.66 probability; it remains visible rather than being silently corrected. Match links form a UK triple and German pair, both flagged for the review edge between them. Records share project references; this small illustrative sample is not an accuracy benchmark. Viewing or refreshing the recording makes no inference request and needs no password. Fresh live experiments still require the app password.
 
 ## Collection showcase
 
-The home page starts with 18 fictional records, including projects appearing once, twice and three times. Choose up to 300 rows (generator ceiling 499), inspect their contents, and see the comparison budget before running. The five-row preset supports a small paid smoke test; it does not contain every group size.
+The collection experiment starts with 18 fictional records, including projects appearing once, twice and three times. Choose up to 300 rows (generator ceiling 499), inspect their contents, and see the comparison budget before running. The five-row preset supports a small paid smoke test; it does not contain every group size.
 
 Local candidate selection uses project fields, never the separate evaluation labels. Its comparison cap controls how many decisions are requested; a small row count alone does not control all-pairs cost. Successful comparisons are retained for resume within the same experiment. Changing settings clears them.
 
