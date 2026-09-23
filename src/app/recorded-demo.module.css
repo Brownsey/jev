@@ -230,7 +230,9 @@
   background: #daf2eb;
   color: #076d61;
 }
-.different {
+.different,
+.unlinked,
+.pending {
   background: #eff1f4;
   color: #526171;
 }
@@ -386,5 +388,164 @@
   }
   .fields {
     grid-template-columns: 1fr;
+  }
+}
+
+.cost {
+  grid-column: 1 / -1;
+  background: #e7efff;
+}
+.cost b {
+  font-size: 24px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: end;
+  padding: 12px;
+  border: 1px solid var(--line);
+  background: white;
+}
+.filters label,
+.decisionFilter {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+.filters input,
+.filters select,
+.decisionFilter select {
+  min-height: 35px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 7px;
+  background: white;
+  color: var(--ink);
+}
+.filters button,
+.pagination button {
+  min-height: 35px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 7px 10px;
+  background: white;
+  color: var(--ink);
+  cursor: pointer;
+}
+.filters button:focus-visible,
+.pagination button:focus-visible,
+.filters input:focus-visible,
+.filters select:focus-visible,
+.decisionFilter select:focus-visible {
+  outline: 3px solid #8fafff;
+  outline-offset: 3px;
+}
+.count {
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.recordGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.shell .record {
+  min-width: 0;
+  padding: 13px;
+  margin: 0;
+  border: 1px solid var(--line);
+  background: white;
+}
+.record summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.record summary::before {
+  content: "+";
+  color: var(--blue);
+  font-weight: 700;
+}
+.record[open] summary::before {
+  content: "−";
+}
+.record summary > span {
+  min-width: 0;
+}
+.record summary > span:first-of-type {
+  flex: 1;
+}
+.record strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.record summary b {
+  flex: none;
+  height: fit-content;
+  padding: 3px 6px;
+  font:
+    700 10px Consolas,
+    monospace;
+  text-transform: uppercase;
+}
+.badges {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+.linked {
+  background: #daf2eb;
+  color: #076d61;
+}
+.empty {
+  margin: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--muted);
+}
+.decisionFilter {
+  width: fit-content;
+  margin-bottom: 12px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.pagination span {
+  color: var(--muted);
+  font:
+    11px Consolas,
+    monospace;
+}
+.receipt {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font:
+    11px Consolas,
+    monospace;
+}
+@media (max-width: 720px) {
+  .recordGrid {
+    grid-template-columns: 1fr;
+  }
+  .filters label {
+    width: 100%;
+  }
+  .filters input,
+  .filters select {
+    width: 100%;
   }
 }

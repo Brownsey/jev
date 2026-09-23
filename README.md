@@ -4,9 +4,11 @@ A demonstration of turning messy UK and German construction/planning records int
 
 ## Recorded Jev demo
 
-The immutable fixture in `src/data/jev-recording.json` was captured through the hosted live adapter on 23 September 2026 using five fictional records from `generateCollection(5, 20260922, "Mixed")`. All ten possible pairs were submitted in one request, including cross-country negatives. The response identifies `typesafe/jev-1.13-20260917`, 4,204 input tokens, 328 ms server-reported elapsed time and $0.000176568 cost.
+The fixture in `src/data/jev-recording.json` was captured through the hosted live adapter on 23 September 2026 using 20 fictional records from `generateCollection(20, 20260922, "Mixed")`: three singletons, four pairs and three triplets. All 190 possible pairs were submitted once in ten batches of at most 20 comparisons. The responses identify `typesafe/jev-1.13-20260917`, 95,946 total input tokens, 2,843 ms summed server-reported elapsed time and $0.004029732 total cost. The recording retains individual batch receipts as well as aggregate results.
 
-After the app's 0.72 selected-option probability threshold, four comparisons match, five differ and one requires review. The uncertain comparison originally selected match at 0.66 probability; it remains visible rather than being silently corrected. Match links form a UK triple and German pair, both flagged for the review edge between them. Records share project references; this small illustrative sample is not an accuracy benchmark. Viewing or refreshing the recording makes no inference request and needs no password. Fresh live experiments still require the app password.
+With a conservative prompt and 0.90 selected-option probability threshold chosen before inference, 13 comparisons match, 127 differ and 50 require review. The accepted match links reproduce all ten synthetic truth groups without false merges; the uncertain comparisons leave review flags on every group. Match membership and review status are shown separately. Records share project references; this small illustrative sample is not an accuracy benchmark. Viewing, searching, filtering or refreshing the recording makes no inference request and needs no password. Fresh live experiments still require the app password.
+
+The homepage begins with the full dataset: expand any record, search all fields, filter by country, or inspect records with accepted matches, no accepted matches or review flags. Proposed groups follow the data. Comparison evidence is paginated in sets of 20 and can be filtered by decision; the original choice, confidence and probabilities remain available for every pair. Filters are temporary and leave the separate experiment workspace unchanged.
 
 ## Collection showcase
 

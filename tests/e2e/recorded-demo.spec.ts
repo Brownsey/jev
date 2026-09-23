@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import recording from "../../src/data/jev-recording.json";
 
-test("recorded demo shows every actual outcome without requesting inference", async ({
+test("recorded demo shows actual outcomes without requesting inference", async ({
   page,
 }) => {
   const inference: string[] = [];
@@ -10,18 +10,22 @@ test("recorded demo shows every actual outcome without requesting inference", as
   });
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: "Five records. Two proposed entities." }),
+    page.getByRole("heading", { name: "20 records. Real Jev results." }),
   ).toBeVisible();
   await expect(
     page.getByText("Recorded Jev run", { exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByText(recording.response.model, { exact: true }),
+    page
+      .getByRole("region", { name: "What ran" })
+      .getByText(recording.response.model, { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("article", { name: /^Comparison \d+$/ }),
-  ).toHaveCount(10);
-  for (const [index, result] of recording.response.results.entries()) {
+  ).toHaveCount(20);
+  for (const [index, result] of recording.response.results
+    .slice(0, 20)
+    .entries()) {
     const comparison = page.getByRole("article", {
       name: `Comparison ${index + 1}`,
       exact: true,
@@ -31,6 +35,9 @@ test("recorded demo shows every actual outcome without requesting inference", as
   await expect(
     page.getByRole("link", { name: "Try your own dataset" }),
   ).toHaveAttribute("href", "/experiment");
+  await expect(
+    page.getByRole("region", { name: "Recorded run summary" }),
+  ).toContainText("$0.004029732 USD");
   await page.reload();
   await expect(
     page.getByRole("heading", { name: "Every comparison" }),

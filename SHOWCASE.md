@@ -1,5 +1,16 @@
 # Entity discovery showcase — iteration 1
 
+## Twenty-record recording — contract v2
+
+Base `a6a119d`. The user explicitly expands the paid example to at least 20 records, superseding the earlier five-record limit for this capture. Use `generateCollection(20, 20260922, "Mixed")`: three singletons, four pairs and three triplets. Compare all 190 unique unordered pairs in batches of at most 20 through the existing live adapter, once each. Use a conservative prompt and selected-option threshold 0.90, chosen before inference. Preserve every response, including errors or uncertainty; do not rerun to improve outcomes. Persist per-batch receipts and summed actual metadata, with unknown cost remaining unknown.
+
+- T1 The saved fixture contains 20 unique UK/Germany records with the required truth composition, all 190 pair results, and real model/time/cost/token metadata. Truth stays outside provider input. Actual outcomes determine groups, never truth. No further paid inference in tests or page interaction.
+- T2 Show the full dataset before grouped outcomes with 20 expandable record cards, all eight fields, search across fields, country filter, outcome highlighting/filter, clear count and empty state. Match membership and review flags are independent: 'Has a match' includes members of multi-record proposed groups even when incident comparisons require review; 'No accepted match' includes one-record groups; 'Needs review' can overlap both. Never replace a group's review status with a linked status. Keyboard expansion/focus and mobile layout must work; filters reset naturally on reload without mutating experiment persistence.
+- T3 Headline/counts/group statuses are data-driven. Distinguish input singletons from model records with no match; mark review conflicts honestly. Show actual total run cost prominently, explain replay is free, retain prompt and per-batch provenance. Paginate the 190 comparisons in pages of 20 and filter by decision; preserve original choices/confidence/probabilities and access to every result.
+- T4 Preserve `/experiment`, `/lab`, credentials and generator behavior. Update recorded-demo tests for new fixture; add regression before implementation, independently validate the interactive dataset and data integrity, then distinct final review. Verify typecheck/unit/build/all browsers and inspect desktop/mobile. Commit/push and verify exact Vercel deployment and hosted journey.
+
+Lead owns capture/fixture/contracts/shared tests/docs/build/server/git/deploy. Terra owns recorded-demo component, stylesheet and any narrowly scoped recorded explorer/components. Validator owns independent recorded validation tests only. Established palette, fonts and native details are retained; compact dataset grid precedes grouped results, limited comparison pages prevent an unbounded wall of cards. No new dependencies or backend changes.
+
 ## Recorded demo — contract v1
 
 Base `34a1ee3`. Light delivery with fullstack-efficient routing. The user requested one real Jev run for the demo. One paid request through the existing hosted adapter used five source records and all ten pair comparisons; preserve its complete normalized response in `src/data/jev-recording.json`. No additional paid inference for implementation or tests.
